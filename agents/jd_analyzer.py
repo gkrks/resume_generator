@@ -100,6 +100,11 @@ and a master_resume JSON.  Your job is to produce a structured analysis.
 
 7. Pick the best role title for each experience considering the JD.
    Use alternate_roles from master_resume when they better match the JD.
+   **SWE role title overrides (mandatory for SWE roles):**
+   - Matic → "Software Engineer (Product Associate)"
+   - Saayam → "Software Engineer"
+   - Wurq → "Software Developer Intern"
+   - ZS → "Software Engineer"
 
 8. Auto-pick the most impactful project(s) based on JD keyword overlap.
    For SWE roles, follow rule 6a strictly for project selection.
