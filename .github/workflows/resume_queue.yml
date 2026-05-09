@@ -12,13 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: RESUME
     timeout-minutes: 30
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
-      GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
-      RESUMES_OUTPUT_DIR: /tmp/resumes
 
     steps:
       - name: Checkout repo
@@ -45,8 +38,26 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
+      - name: Verify secrets are set
+        run: |
+          if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
+            echo "::error::SUPABASE_URL secret is empty or not set in RESUME environment"
+            exit 1
+          fi
+          echo "SUPABASE_URL is set (length: ${#SUPABASE_URL})"
+          echo "SUPABASE_SERVICE_ROLE_KEY is set: $([ -n '${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' ] && echo yes || echo NO)"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
       - name: Process pending queue items
         run: python main.py --queue --limit 20
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          RESUMES_OUTPUT_DIR: /tmp/resumes
 
       - name: Summary
         if: always()
