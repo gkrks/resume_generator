@@ -4,6 +4,35 @@ from fpdf import FPDF
 from datetime import date
 
 
+def _clean(text) -> str:
+    """Sanitize text for Helvetica (latin-1 only). Replace common unicode."""
+    if not isinstance(text, str):
+        text = str(text) if text is not None else ""
+    return (
+        text
+        .replace("\u2014", "-")       # em dash
+        .replace("\u2013", "-")       # en dash
+        .replace("\u2018", "'")       # left single quote
+        .replace("\u2019", "'")       # right single quote
+        .replace("\u201c", '"')       # left double quote
+        .replace("\u201d", '"')       # right double quote
+        .replace("\u2026", "...")     # ellipsis
+        .replace("\u00a0", " ")       # non-breaking space
+        .replace("\u2022", "-")       # bullet
+        .replace("\u00b7", "-")       # middle dot
+        .replace("\u2192", "->")      # right arrow
+        .replace("\u2190", "<-")      # left arrow
+        .replace("\u2248", "~")       # approximately
+        .replace("\u00d7", "x")       # multiplication sign
+        .replace("\u2264", "<=")      # less than or equal
+        .replace("\u2265", ">=")      # greater than or equal
+        .replace("\u2260", "!=")      # not equal
+        .replace("\u00e9", "e")       # e-acute
+        .replace("\u00f6", "o")       # o-umlaut
+        .encode("latin-1", errors="replace").decode("latin-1")  # catch-all
+    )
+
+
 # ── Colors ───────────────────────────────────────────────────────
 _GREEN = (34, 139, 34)
 _RED = (200, 30, 30)
@@ -42,8 +71,8 @@ class ReportPDF(FPDF):
 
     def __init__(self, company: str, role: str):
         super().__init__(orientation="P", unit="mm", format="A4")
-        self.company = company
-        self.role = role
+        self.company = _clean(company)
+        self.role = _clean(role)
         self.set_auto_page_break(auto=True, margin=12)
 
     def header(self):
@@ -54,7 +83,7 @@ class ReportPDF(FPDF):
         self.set_y(5)
         self.cell(0, 7, "Resume Evaluation Report", align="C", new_x="LMARGIN", new_y="NEXT")
         self.set_font("Helvetica", "", 9)
-        self.cell(0, 5, f"{self.role}  @  {self.company}   |   {date.today().isoformat()}", align="C", new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 5, _clean(f"{self.role}  @  {self.company}   |   {date.today().isoformat()}"), align="C", new_x="LMARGIN", new_y="NEXT")
         self.ln(5)
 
     def footer(self):
@@ -69,7 +98,7 @@ class ReportPDF(FPDF):
         self.set_fill_color(*_SECTION_BG)
         self.set_font("Helvetica", "B", 10)
         self.set_text_color(*_DARK)
-        self.cell(0, 7, f"  {title}", fill=True, new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 7, _clean(f"  {title}"), fill=True, new_x="LMARGIN", new_y="NEXT")
         self.ln(1)
 
     def verdict_banner(self, verdict: str):
@@ -85,9 +114,10 @@ class ReportPDF(FPDF):
 
     def info_row(self, label: str, value: str, is_url: bool = False):
         """Compact key-value row for the job details card."""
+        value = _clean(value)
         self.set_font("Helvetica", "B", 7.5)
         self.set_text_color(*_GRAY)
-        self.cell(28, 4.5, label, new_x="RIGHT")
+        self.cell(28, 4.5, _clean(label), new_x="RIGHT")
         self.set_font("Helvetica", "", 7.5)
         if is_url and value:
             self.set_text_color(*_LINK_BLUE)
@@ -97,6 +127,8 @@ class ReportPDF(FPDF):
             self.cell(0, 4.5, value[:90], new_x="LMARGIN", new_y="NEXT")
 
     def kv_row(self, key: str, value: str, status: str | None = None):
+        key = _clean(key)
+        value = _clean(value)
         self.set_font("Helvetica", "B", 8)
         self.set_text_color(*_DARK)
         self.cell(50, 5, key, new_x="RIGHT")
@@ -106,7 +138,7 @@ class ReportPDF(FPDF):
             self.set_fill_color(*bg)
             self.set_font("Helvetica", "B", 8)
             self.set_text_color(*color)
-            self.cell(14, 5, status.upper(), fill=True, align="C", new_x="RIGHT")
+            self.cell(14, 5, _clean(status.upper()), fill=True, align="C", new_x="RIGHT")
             self.cell(2, 5, "", new_x="RIGHT")
         self.set_font("Helvetica", "", 8)
         self.set_text_color(*_DARK)
@@ -117,13 +149,14 @@ class ReportPDF(FPDF):
         self.set_text_color(*_WHITE)
         self.set_font("Helvetica", "B", 7)
         for name, w in cols:
-            self.cell(w, 5, name, fill=True, align="C", new_x="RIGHT")
+            self.cell(w, 5, _clean(name), fill=True, align="C", new_x="RIGHT")
         self.ln()
         self.set_text_color(*_DARK)
 
     def table_row(self, cells: list[tuple[str, int]], status_col: int | None = None):
         self.set_font("Helvetica", "", 7)
         for i, (text, w) in enumerate(cells):
+            text = _clean(text)
             if status_col is not None and i == status_col:
                 color = _status_color(text)
                 bg = _status_bg(text)
@@ -134,14 +167,14 @@ class ReportPDF(FPDF):
                 self.set_text_color(*_DARK)
                 self.set_font("Helvetica", "", 7)
             else:
-                self.cell(w, 4.5, str(text)[:int(w / 1.6)], new_x="RIGHT")
+                self.cell(w, 4.5, text[:int(w / 1.6)], new_x="RIGHT")
         self.ln()
 
     def bullet_item(self, text: str):
         self.set_font("Helvetica", "", 8)
         self.set_text_color(*_DARK)
         self.cell(5, 4, "-", new_x="RIGHT")
-        self.multi_cell(0, 4, text, new_x="LMARGIN", new_y="NEXT")
+        self.multi_cell(0, 4, _clean(text), new_x="LMARGIN", new_y="NEXT")
 
 
 def generate_report_pdf(
@@ -182,10 +215,11 @@ def generate_report_pdf(
     VAL_W_R = 210 - pdf.r_margin - COL2_X - LBL_W - 2  # right col value width
 
     def _info(x: float, label: str, value: str, is_url: bool = False):
+        value = _clean(value)
         pdf.set_xy(x, pdf.get_y())
         pdf.set_font("Helvetica", "B", 7)
         pdf.set_text_color(*_GRAY)
-        pdf.cell(LBL_W, ROW_H, label, new_x="RIGHT")
+        pdf.cell(LBL_W, ROW_H, _clean(label), new_x="RIGHT")
         val_w = VAL_W_L if x < COL2_X else VAL_W_R
         pdf.set_font("Helvetica", "", 7)
         if is_url and value:
@@ -393,10 +427,10 @@ def generate_report_pdf(
         for i, fix in enumerate(fixes, 1):
             pdf.set_font("Helvetica", "B", 8)
             pdf.set_text_color(*_RED)
-            pdf.cell(0, 5, f"  Fix #{i}: {fix.get('issue', '')}", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 5, _clean(f"  Fix #{i}: {fix.get('issue', '')}"), new_x="LMARGIN", new_y="NEXT")
             pdf.set_text_color(*_DARK)
             pdf.set_font("Helvetica", "", 8)
-            pdf.cell(0, 5, f"    Action: {fix.get('fix', '')}  |  Target: {fix.get('target_step', '')}", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 5, _clean(f"    Action: {fix.get('fix', '')}  |  Target: {fix.get('target_step', '')}"), new_x="LMARGIN", new_y="NEXT")
         pdf.ln(2)
 
     # ── Section 5/6: Skills Coverage ─────────────────────────────
