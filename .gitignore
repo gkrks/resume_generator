@@ -1,0 +1,10 @@
+.env
+.env.example
+__pycache__/
+node_modules/
+out/
+logs/
+*.pyc
+config/google-service-account.json
+config/google-client-secret.json
+config/google-token.json

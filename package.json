@@ -1,0 +1,9 @@
+{
+  "name": "resume-generator",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "docx": "^9.1.1",
+    "pdfkit": "^0.15.0"
+  }
+}

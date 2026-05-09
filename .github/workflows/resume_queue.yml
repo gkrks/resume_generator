@@ -1,0 +1,55 @@
+name: Process Resume Queue
+
+on:
+  schedule:
+    # Every hour at minute 0
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    # Manual trigger from GitHub UI
+
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+  GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+  RESUMES_OUTPUT_DIR: /tmp/resumes
+
+jobs:
+  process-queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt google-auth google-api-python-client
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Process pending queue items
+        run: python main.py --queue --limit 20
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "=== Output files ==="
+          find /tmp/resumes -type f 2>/dev/null || echo "No files generated"
+          echo ""
+          echo "=== Folder structure ==="
+          find /tmp/resumes -type d 2>/dev/null || echo "No folders"
