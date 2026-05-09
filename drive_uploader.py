@@ -142,13 +142,19 @@ def _upload_file(service, file_path: str, folder_id: str) -> dict:
     return uploaded
 
 
-def upload_output_dir(output_dir: str, root_folder_id: str | None = None) -> dict:
+def upload_output_dir(
+    output_dir: str,
+    root_folder_id: str | None = None,
+    folder_parts: list[str] | None = None,
+) -> dict:
     """Upload all files from an output directory to Google Drive.
 
     Args:
-        output_dir: Local path like /tmp/resumes/Strong/Stripe/Product_Manager/2026-05-08/
+        output_dir: Local path to the output folder.
         root_folder_id: Google Drive folder ID for the root folder.
-                        Falls back to GOOGLE_DRIVE_FOLDER_ID env var.
+        folder_parts: Explicit folder path to create on Drive,
+                      e.g. ["SWE", "9 May", "Strong", "Meta", "Software_Engineer"].
+                      When provided, no path guessing is needed.
 
     Returns:
         dict with uploaded file names and their Drive links.
@@ -160,22 +166,9 @@ def upload_output_dir(output_dir: str, root_folder_id: str | None = None) -> dic
     service = _get_service()
     output_path = Path(output_dir)
 
-    # Extract role_type/date/tier/company/role path components
-    # Local path: .../SWE/9 May/Strong/Meta/Software_Engineer
-    parts = output_path.parts
-    role_types = {"SWE", "PM", "TPM", "APM", "PLM"}
-
-    # Find the role_type layer (SWE/PM/TPM) — it's the top-level grouping
-    role_idx = None
-    for i, p in enumerate(parts):
-        if p in role_types:
-            role_idx = i
-            break
-
-    if role_idx is not None:
-        folder_parts = list(parts[role_idx:])
-    else:
-        # Fallback: use last 5 components
+    if not folder_parts:
+        # Fallback: use last 5 path components
+        parts = output_path.parts
         folder_parts = list(parts[-5:]) if len(parts) >= 5 else list(parts[-2:])
 
     leaf_folder_id = _ensure_folder_path(service, root_id, folder_parts)

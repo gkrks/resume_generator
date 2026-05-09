@@ -133,14 +133,22 @@ def _enforce_keyword_coverage(jd_analysis: dict, skills_data: dict) -> dict:
     return skills_data
 
 
-def _build_output_dir(role_type: str, tier: str, company: str, role_title: str) -> Path:
-    """Build: ~/Desktop/Resumes/{role_type}/{date}/{tier}/{Company}/{Role}/"""
-    role_type_dir = role_type.upper()  # SWE, PM, TPM, etc.
-    today = date.today()
-    date_dir = today.strftime("%-d %b")  # "8 May", "9 May"
-    company_dir = _sanitize(company)
-    role_dir = _sanitize(role_title)
-    out = RESUMES_ROOT / role_type_dir / date_dir / tier / company_dir / role_dir
+def _build_folder_parts(role_type: str, tier: str, company: str, role_title: str) -> list[str]:
+    """Build the folder path parts for both local and Drive."""
+    return [
+        role_type.upper(),
+        date.today().strftime("%-d %b"),  # "9 May"
+        tier,
+        _sanitize(company),
+        _sanitize(role_title),
+    ]
+
+
+def _build_output_dir(folder_parts: list[str]) -> Path:
+    """Build local output dir from folder parts."""
+    out = RESUMES_ROOT
+    for part in folder_parts:
+        out = out / part
     out.mkdir(parents=True, exist_ok=True)
     return out
 
@@ -320,11 +328,12 @@ def run(
          f"HR: {'PASS' if checks['hr_check'] else 'FAIL'} | Tier: {tier}")
 
     # Set up output directory based on tier
+    folder_parts = _build_folder_parts(role_type, tier, company, role)
     if output_base:
         out_dir = Path(output_base)
         out_dir.mkdir(parents=True, exist_ok=True)
     else:
-        out_dir = _build_output_dir(role_type, tier, company, role)
+        out_dir = _build_output_dir(folder_parts)
     _log("4/5", f"Output: {out_dir}")
 
     # ── Step 5: Cover Letter + Outreach + File Gen (parallel) ────
@@ -369,6 +378,7 @@ def run(
     generated = {
         "output_dir": str(out_dir),
         "tier": tier,
+        "folder_parts": folder_parts,
         "resume_pdf": resume_pdf_path,
         "evaluation_report": report_pdf_path,
         "cover_letter_docx": cl_docx_path,

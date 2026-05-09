@@ -26,14 +26,14 @@ _DRIVE_ENABLED = bool(
 )
 
 
-def _upload_to_drive(output_dir: str):
+def _upload_to_drive(output_dir: str, folder_parts: list[str] | None = None):
     """Upload output to Google Drive if credentials are configured."""
     if not _DRIVE_ENABLED:
         return
     try:
         from drive_uploader import upload_output_dir
         print(f"\n  Uploading to Google Drive...")
-        links = upload_output_dir(output_dir)
+        links = upload_output_dir(output_dir, folder_parts=folder_parts)
         print(f"  Uploaded {len(links)} file(s) to Drive")
     except Exception as e:
         print(f"  WARNING: Drive upload failed: {e}")
@@ -204,7 +204,7 @@ def process_one(queue_item: dict) -> dict:
     print(f"\n  Marked queue item {queue_id} as done. Tier: {tier}")
 
     # Upload to Google Drive
-    _upload_to_drive(result.get("output_dir", ""))
+    _upload_to_drive(result.get("output_dir", ""), result.get("folder_parts"))
 
     return result
 
