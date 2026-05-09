@@ -176,11 +176,21 @@ def run(
     with open(master_path) as f:
         master_resume = json.load(f)
 
+    # For SWE roles, swap bullets with swe_bullets so all agents see
+    # engineering-framed bullets without needing prompt-level changes.
+    if role_type.upper() == "SWE":
+        for section in ("experiences", "projects"):
+            for item in master_resume.get(section, []):
+                if "swe_bullets" in item:
+                    item["bullets"] = item.pop("swe_bullets")
+                else:
+                    item.pop("swe_bullets", None)
+
     tmp_dir = Path(tempfile.mkdtemp(prefix="resume_gen_"))
 
     # ── Step 1: JD Analysis (Sonnet, cached) ─────────────────────
     _log("1/5", "Analyzing job description...")
-    jd_analysis = analyze_jd(jd_text, master_resume)
+    jd_analysis = analyze_jd(jd_text, master_resume, role_type)
     company = jd_analysis.get("company", "Unknown")
     role = jd_analysis.get("role_title", role_type)
     company_safe = _sanitize(company)

@@ -108,13 +108,14 @@ Return ONLY valid JSON.
 """
 
 
-def analyze_jd(jd_text: str, master_resume: dict) -> dict:
+def analyze_jd(jd_text: str, master_resume: dict, role_type: str = "PM") -> dict:
     """Analyze a job description against the master resume.
 
     Returns structured analysis with requirements, keyword inventory,
     and recommended experience/project selection.
     """
     user_msg = (
+        f"## Role Type: {role_type}\n\n"
         f"## Job Description\n\n{jd_text}\n\n"
         "Analyze this JD against the master resume in your system prompt "
         "and return the structured JSON output."

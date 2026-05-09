@@ -133,6 +133,108 @@
                     "source": "resume",
                     "evidence_url": null
                 }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "exp_matic_0_a4f2",
+                    "text": "Reduced false-positive sensor rejection rate from 75% to under 30% by building a Python diagnostic pipeline over production telemetry, isolating calibration drift and unblocking manufacturing throughput.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "Statistical Process Control",
+                        "Sensor Validation",
+                        "Diagnostic Pipelines"
+                    ],
+                    "metrics": [
+                        "75%",
+                        "30%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_matic_0_b8e1",
+                    "text": "Caught ~40% of sensor defects before assembly by engineering automated calibration test suites in Python for the crown module (cameras, infrared, microphones), tuning thresholds against human-interaction baselines.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "Automated Testing",
+                        "Sensor Calibration",
+                        "Threshold Tuning"
+                    ],
+                    "metrics": [
+                        "~40%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_matic_0_c9d3",
+                    "text": "Cut defect-escape rates from assembly to field by shipping 3 automated quality gates in Python and Bash, integrating sensor-output assertions and model-accuracy checks into the CI pipeline.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "Bash",
+                        "CI/CD",
+                        "Automated Quality Gates",
+                        "ML Validation"
+                    ],
+                    "metrics": [
+                        "3 quality gates"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_matic_0_d2a7",
+                    "text": "Cut cross-team review cycles from ~2 weeks to 4 days by building a shared integration-testing framework in Python spanning hardware, firmware, and ML codebases.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "Integration Testing",
+                        "Test Frameworks",
+                        "Cross-Team Automation"
+                    ],
+                    "metrics": [
+                        "~2 weeks",
+                        "4 days"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_matic_0_e7b5",
+                    "text": "Built Rust backend services replacing 5 fragmented spreadsheets with a PostgreSQL-backed data layer, exposing REST APIs that gave hardware and production teams live build-state visibility across ~200 units/month.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Rust",
+                        "PostgreSQL",
+                        "REST APIs",
+                        "Backend Services"
+                    ],
+                    "metrics": [
+                        "5 spreadsheets",
+                        "~200 units/month"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_matic_0_f3c8",
+                    "text": "Cut memory overhead ~60% by refactoring data-collection pipelines in Python for production-line robots, switching to streaming ingestion and monotonic timestamps for reliable anomaly traces.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "Data Pipelines",
+                        "Streaming Ingestion",
+                        "Memory Optimization"
+                    ],
+                    "metrics": [
+                        "~60%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                }
             ]
         },
         {
@@ -251,6 +353,116 @@
                         "SLA Management"
                     ],
                     "metrics": [],
+                    "source": "resume",
+                    "evidence_url": null
+                }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "exp_saayam_1_a1b2",
+                    "text": "Cut median task-completion time ~20% by building end-to-end chat coordination (WebSocket messaging, geolocation, verification) on a React Native app with a Node/Express backend, shipped in three months.",
+                    "format": "XYZ",
+                    "skills": [
+                        "React Native",
+                        "Node.js",
+                        "Express.js",
+                        "WebSocket",
+                        "Mobile Development"
+                    ],
+                    "metrics": [
+                        "~20%",
+                        "three months"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_saayam_1_b3c4",
+                    "text": "Structured 2 quarters of backend deliverables by designing normalized PostgreSQL schemas and RESTful API contracts for 6 feature modules, defining entity relationships and validation rules.",
+                    "format": "XYZ",
+                    "skills": [
+                        "PostgreSQL",
+                        "REST API Design",
+                        "Schema Design",
+                        "API Contracts"
+                    ],
+                    "metrics": [
+                        "2 quarters",
+                        "6 modules"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_saayam_1_c5d6",
+                    "text": "Isolated the 2 engagement drivers behind ~65% of retained sessions by building a user-segmentation pipeline in Python and SQL over 1,200 active users, computing cohort retention curves.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "SQL",
+                        "Data Pipelines",
+                        "User Segmentation",
+                        "Cohort Analysis"
+                    ],
+                    "metrics": [
+                        "~65%",
+                        "1,200 users"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_saayam_1_d7e8",
+                    "text": "Designed and shipped a serverless analytics platform on AWS (Lambda, DynamoDB, SQS, S3) ingesting high-volume consumer event streams and powering low-latency reporting APIs consumed by 3+ product teams.",
+                    "format": "XYZ",
+                    "skills": [
+                        "AWS Lambda",
+                        "DynamoDB",
+                        "SQS",
+                        "S3",
+                        "Serverless Architecture",
+                        "Event Streams"
+                    ],
+                    "metrics": [
+                        "3+ product teams"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_saayam_1_e9f0",
+                    "text": "Lifted API throughput ~3x and cut DynamoDB read costs ~40% by architecting REST data models and implementing query-caching layers, letting the platform scale without capacity increases.",
+                    "format": "XYZ",
+                    "skills": [
+                        "REST API Design",
+                        "Query Caching",
+                        "DynamoDB",
+                        "Cost Optimization"
+                    ],
+                    "metrics": [
+                        "~3x",
+                        "~40%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_saayam_1_f1a2",
+                    "text": "Held 99.5% uptime over 8 months with 12 incidents resolved same-day by owning 4 Lambda services end-to-end: CI/CD pipelines in GitHub Actions, CloudWatch alerting, and on-call response.",
+                    "format": "XYZ",
+                    "skills": [
+                        "CI/CD",
+                        "GitHub Actions",
+                        "CloudWatch",
+                        "AWS Lambda",
+                        "Incident Response"
+                    ],
+                    "metrics": [
+                        "99.5%",
+                        "8 months",
+                        "12 incidents",
+                        "4 services"
+                    ],
                     "source": "resume",
                     "evidence_url": null
                 }
@@ -387,6 +599,134 @@
                         "On-Device Inference",
                         "Model Optimization",
                         "Cost Reduction"
+                    ],
+                    "metrics": [
+                        "28%",
+                        "30%",
+                        "45%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "exp_wurq_2_a2b3",
+                    "text": "Optimized a CNN pose-estimation model through knowledge distillation and INT8 quantization in TensorFlow Lite, cutting on-device inference latency from 490ms to 67ms (~7x) and reducing per-inference compute cost ~28%.",
+                    "format": "XYZ",
+                    "skills": [
+                        "TensorFlow Lite",
+                        "Model Quantization",
+                        "Knowledge Distillation",
+                        "Edge Computing",
+                        "CNN"
+                    ],
+                    "metrics": [
+                        "490ms",
+                        "67ms",
+                        "~7x",
+                        "~28%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_wurq_2_b4c5",
+                    "text": "Drove a ~25% lift in monthly sensor-engaged sessions by building in-app feedback components (comments, star ratings) in React Native with Express REST endpoints and PostgreSQL persistence.",
+                    "format": "XYZ",
+                    "skills": [
+                        "React Native",
+                        "Express.js",
+                        "PostgreSQL",
+                        "REST APIs",
+                        "Mobile Development"
+                    ],
+                    "metrics": [
+                        "~25%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_wurq_2_c6d7",
+                    "text": "Served ~10K users by implementing a CNN-based pose-estimation pipeline in Python with OpenCV preprocessing and skeleton-overlay rendering, delivering real-time corrective feedback.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "OpenCV",
+                        "CNN",
+                        "Computer Vision",
+                        "Real-Time Processing"
+                    ],
+                    "metrics": [
+                        "~10K users"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_wurq_2_d8e9",
+                    "text": "Built a data-ingestion pipeline using NumPy and Pandas for 2 IMU sensor datasets (AMASS, DIP-IMU) with ~15K body-keypoint sequences, normalizing coordinate frames for pose-correction training.",
+                    "format": "XYZ",
+                    "skills": [
+                        "NumPy",
+                        "Pandas",
+                        "Data Pipelines",
+                        "IMU Sensors",
+                        "ML Data Preprocessing"
+                    ],
+                    "metrics": [
+                        "~15K sequences",
+                        "2 datasets"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_wurq_2_e0f1",
+                    "text": "Instrumented session telemetry with custom event tracking, identified the top 3 drop-off points through funnel analysis in SQL, then shipped targeted client-side fixes that cut mid-session abandonment ~18%.",
+                    "format": "XYZ",
+                    "skills": [
+                        "SQL",
+                        "Telemetry",
+                        "Funnel Analysis",
+                        "Mobile Debugging"
+                    ],
+                    "metrics": [
+                        "~18%",
+                        "3 drop-off points"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_wurq_2_f2a3",
+                    "text": "Rebuilt the ML inference pipeline on AWS Lambda (Python), cutting p95 latency from 490ms to 67ms (~7x) through cold-start optimization, request batching, and lazy model-loading with shared /tmp caching.",
+                    "format": "XYZ",
+                    "skills": [
+                        "AWS Lambda",
+                        "Python",
+                        "ML Inference",
+                        "Cold-Start Optimization",
+                        "Request Batching"
+                    ],
+                    "metrics": [
+                        "490ms",
+                        "67ms",
+                        "~7x"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_wurq_2_a3b4",
+                    "text": "Shipped on-device TensorFlow Lite inference with INT8 quantization, cutting cloud inference cost 28%, lifting model accuracy 30% via fine-tuning on athlete motion-capture data, and growing MAU 45%.",
+                    "format": "XYZ",
+                    "skills": [
+                        "TensorFlow Lite",
+                        "INT8 Quantization",
+                        "On-Device Inference",
+                        "Model Fine-Tuning"
                     ],
                     "metrics": [
                         "28%",
@@ -539,6 +879,148 @@
                         "Persistence Layer Architecture"
                     ],
                     "metrics": [],
+                    "source": "resume",
+                    "evidence_url": null
+                }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "exp_zs_3_a5b6",
+                    "text": "Protected ~$500K in billable time and unlocked ~$400K in new revenue by building an automated ROI analytics pipeline in Python and SQL that quantified optimization vs. new-feature tradeoffs.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "SQL",
+                        "Data Pipelines",
+                        "Analytics"
+                    ],
+                    "metrics": [
+                        "~$500K",
+                        "~$400K"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_g0h1",
+                    "text": "Powered each disbursement cycle for a $32M sales incentive platform by building the analytics engine in Java and SQL, implementing cohort segmentation, payout-logic validation, and reconciliation.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Java",
+                        "SQL",
+                        "Analytics Engine",
+                        "Payment Systems"
+                    ],
+                    "metrics": [
+                        "$32M"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_b7c8",
+                    "text": "Eliminated ~35% of support volume over two quarters by building automated regression test suites in JUnit and shipping targeted bug fixes for recurring data-integrity and UI rendering issues on the $32M platform.",
+                    "format": "XYZ",
+                    "skills": [
+                        "JUnit",
+                        "Regression Testing",
+                        "Bug Fixing",
+                        "Data Integrity"
+                    ],
+                    "metrics": [
+                        "~35%",
+                        "two quarters",
+                        "$32M"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_c9d0",
+                    "text": "Drove 45% active-user growth (to 580) and a 26% quarterly velocity lift by implementing feature-usage tracking with event instrumentation and SQL-based analytics dashboards.",
+                    "format": "XYZ",
+                    "skills": [
+                        "SQL",
+                        "Event Instrumentation",
+                        "Analytics Dashboards",
+                        "Feature Tracking"
+                    ],
+                    "metrics": [
+                        "45%",
+                        "580",
+                        "26%"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_d1e2",
+                    "text": "Built API integrations with 3 external data providers using Java HTTP clients and JSON parsing, automating ingestion pipelines with scheduled jobs that maintained 100% on-time data delivery for 4 consecutive quarters.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Java",
+                        "REST APIs",
+                        "JSON Parsing",
+                        "Scheduled Jobs",
+                        "Data Integration"
+                    ],
+                    "metrics": [
+                        "3 providers",
+                        "100%",
+                        "4 quarters"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_e3f4",
+                    "text": "Cut time-to-first-value from ~6 weeks to ~3 weeks by automating client onboarding with Python scripts, parameterized SQL templates, and config-driven provisioning.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "SQL",
+                        "Automation",
+                        "Config-Driven Provisioning"
+                    ],
+                    "metrics": [
+                        "~6 weeks",
+                        "~3 weeks"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_f5a6",
+                    "text": "Built and tuned Java/SQL payment-processing services for a $32M enterprise platform, contributing ~$1.2M in incremental revenue by implementing idempotent retry logic and dead-letter queues to reduce payment failures.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Java",
+                        "SQL",
+                        "Payment Processing",
+                        "Idempotent Retry",
+                        "Dead-Letter Queues"
+                    ],
+                    "metrics": [
+                        "$32M",
+                        "~$1.2M"
+                    ],
+                    "source": "resume",
+                    "evidence_url": null
+                },
+                {
+                    "id": "exp_zs_3_a7b8",
+                    "text": "Modeled domain entities and transaction workflows in normalized SQL schemas with layered OOP design (repository pattern), reducing payment-processing bugs ~30% by separating business logic from persistence layers.",
+                    "format": "XYZ",
+                    "skills": [
+                        "SQL",
+                        "OOP",
+                        "Repository Pattern",
+                        "Domain Modeling",
+                        "Persistence Layer"
+                    ],
+                    "metrics": [
+                        "~30%"
+                    ],
                     "source": "resume",
                     "evidence_url": null
                 }
@@ -969,6 +1451,350 @@
                     "source": "website",
                     "evidence_url": "https://krithik.xyz/day-3-reading-from-disk.html"
                 }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "proj_searchengine_rust_0_a1b2",
+                    "text": "Built a search engine from scratch in Rust following Manning's IR textbook, targeting sub-10ms p95 query latency on 10M-document corpora using dictionary-in-RAM and postings-on-disk architecture.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Rust",
+                        "Information Retrieval",
+                        "Search Architecture",
+                        "Systems Programming"
+                    ],
+                    "metrics": [
+                        "sub-10ms p95",
+                        "10M documents"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_b3c4",
+                    "text": "Achieved nanosecond term lookups by building a positional inverted index in Rust over 11,314 documents (138,743 terms) using a dictionary-in-RAM and single-seek postings-on-disk architecture.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Inverted Index",
+                        "Rust",
+                        "Disk I/O",
+                        "Memory Layout"
+                    ],
+                    "metrics": [
+                        "11,314 docs",
+                        "138,743 terms"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-1-building-a-search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_c5d6",
+                    "text": "Cut query latency 7x by sorting query terms by posting-list length at index-build time using a one-pass pre-sort in Rust, eliminating redundant per-query sorting with linear scaling benefits.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Query Optimization",
+                        "Algorithm Design",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "7x"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-1-building-a-search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_d7e8",
+                    "text": "Corrected 'Uniited Staates of Ameeriica' and returned results in 19ms by building a three-layer spell corrector in Rust (trigram index, Jaccard filter, Levenshtein DP at O(m*n) per pair).",
+                    "format": "XYZ",
+                    "skills": [
+                        "Spell Correction",
+                        "Trigram Indexing",
+                        "Jaccard Similarity",
+                        "Levenshtein Distance",
+                        "Dynamic Programming"
+                    ],
+                    "metrics": [
+                        "19ms"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-2-phrase-search-and-spell-correction.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_e9f0",
+                    "text": "Shrunk index size 76% (34.8MB to 8.3MB) by replacing bincode with a hand-rolled VByte encoder in Rust using 7-bit payloads and gap encoding on sorted doc IDs; tradeoff breaks even at 1M docs.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Compression",
+                        "VByte Encoding",
+                        "Systems Tradeoffs",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "76%",
+                        "34.8MB",
+                        "8.3MB"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-4-compression.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_f1a2",
+                    "text": "Fixed length-bias ranking by implementing TF-IDF with cosine normalization in Rust, promoting a relevant 13-line post above an unrelated 1,835-line archive using precomputed vector lengths.",
+                    "format": "XYZ",
+                    "skills": [
+                        "TF-IDF",
+                        "Cosine Normalization",
+                        "Ranking",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "13-line",
+                        "1,835-line"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-5-tf-idf-ranking.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_a3b4",
+                    "text": "Built tiered indexes in Rust by running a histogram over 1.7M (term, doc, tf) triples to data-drive tier thresholds, exposing that textbook defaults put just 0.49% of postings in Tier 1.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Tiered Indexes",
+                        "Threshold Tuning",
+                        "Empirical Analysis",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "1.7M triples",
+                        "0.49%"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-6-tiered-indexes.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_c5d7",
+                    "text": "Turned 0 results into 10 on 'israeli palestinian' by replacing strict phrase matching with proximity scoring in Rust (boost = 1+k/w via greedy k-pointer window advance over position lists).",
+                    "format": "XYZ",
+                    "skills": [
+                        "Proximity Scoring",
+                        "Window-Based Ranking",
+                        "Greedy Algorithms",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "0 to 10 results"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-7-proximity-scoring.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_e9f1",
+                    "text": "Achieved constant-memory index merging by refactoring from all-blocks-in-RAM to a streaming k-way merge in Rust with per-block readers, unblocking the path to million-document scale.",
+                    "format": "XYZ",
+                    "skills": [
+                        "K-Way Merge",
+                        "Streaming Algorithms",
+                        "Memory Management",
+                        "Rust"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/merge-fix-streaming-k-way-merge.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_f3a4",
+                    "text": "Documented 9+ engineering articles at krithik.xyz by logging each chapter's implementation tradeoffs with real benchmark data from the 11K-doc corpus, including failures and wrong turns.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Technical Writing",
+                        "Building in Public",
+                        "Tradeoff Analysis"
+                    ],
+                    "metrics": [
+                        "9+ articles",
+                        "11K docs"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_a5b6",
+                    "text": "Reduced posting-list intersection from O(x*y) to O(x+y) by implementing two-pointer merge in Rust over sorted lists; for lists of 500 and 5,000 that's 5,500 comparisons vs 2,500,000.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Two-Pointer Algorithm",
+                        "Posting List Intersection",
+                        "Algorithm Complexity",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "O(x+y)",
+                        "5,500 vs 2,500,000"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-1-building-a-search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_c7d8",
+                    "text": "Benchmarked skip pointers at sqrt(P) interval against two-pointer merge in Rust for posting-list intersection; at 11K-doc scale skip-check overhead exceeded savings, deferring for larger corpora.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Skip Pointers",
+                        "Algorithm Benchmarking",
+                        "Scale-Dependent Optimization",
+                        "Rust"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-1-building-a-search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_e9f0a",
+                    "text": "Ranked spell-correction candidates by implementing Levenshtein edit distance via DP in Rust at O(m*n) per pair, after a trigram + Jaccard pre-filter narrowed 120K vocab terms to a handful.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Dynamic Programming",
+                        "Levenshtein Distance",
+                        "Edit Distance",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "O(m*n)",
+                        "120K vocabulary"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-2-phrase-search-and-spell-correction.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_b1c2",
+                    "text": "Kept RAM bounded regardless of corpus size by implementing block-based index construction in Rust at 4,000 docs per block, alphabetically sorted within each block to enable streaming merge.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Block-Based Indexing",
+                        "External Sorting",
+                        "Streaming Algorithms",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "4,000 docs/block"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-3-reading-from-disk.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_d3e4",
+                    "text": "Eliminated per-query O(vocab) normalization by precomputing cosine vector lengths during the merge step in Rust, squaring and summing each doc's tf-idf weights in a single streaming pass.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Cosine Normalization",
+                        "Vector Space Model",
+                        "Pre-Computation",
+                        "Rust"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-5-tf-idf-ranking.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_f5a6",
+                    "text": "Lifted doc 8802 from rank #14 to #1 by diagnosing length bias in raw TF-IDF scoring in Rust and applying cosine normalization, fixing a ranking failure against a 1,835-line archive.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Debugging",
+                        "Length Normalization",
+                        "Empirical Validation",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "#14 to #1",
+                        "1,835 lines"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-5-tf-idf-ranking.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_b7c8",
+                    "text": "Refactored the dictionary into a TermEntry struct with per-tier offsets and doc_freq in Rust, threading a tier_idx through retrieval so one disk file holds three tier regions with HashSet dedup.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Rust",
+                        "Struct Refactoring",
+                        "Tiered Index Architecture",
+                        "Type-Safe APIs"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-6-tiered-indexes.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_d9e0",
+                    "text": "Improved relevance ratio from 2.3x to 4.25x by hand-coding a multiplicative proximity boost (1+k/w) in Rust per Manning S.7.2.2, computing the smallest covering window via greedy k-pointer advance.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Proximity Scoring",
+                        "Greedy Algorithms",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "2.3x",
+                        "4.25x"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-7-proximity-scoring.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_f1a2b",
+                    "text": "Grounded Heaps' and Zipf's laws in real corpus measurements in Rust: 'of' takes 394KB of postings vs 4KB for 'america', explaining why VByte gap-encoding compresses common terms 77%+.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Heaps' Law",
+                        "Zipf's Law",
+                        "Empirical IR",
+                        "Compression Theory"
+                    ],
+                    "metrics": [
+                        "394KB",
+                        "4KB",
+                        "77%"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-4-compression.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_c3d4",
+                    "text": "Planned Cranfield benchmark evaluation (1,398 abstracts, 225 queries) to compute MAP and P@10 against qrels in Rust before and after BM25, replacing ad-hoc testing with standard IR metrics.",
+                    "format": "XYZ",
+                    "skills": [
+                        "IR Benchmarking",
+                        "MAP Evaluation",
+                        "P@K Metrics",
+                        "Cranfield Collection"
+                    ],
+                    "metrics": [
+                        "1,398 abstracts",
+                        "225 queries"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/search-engine.html"
+                },
+                {
+                    "id": "proj_searchengine_rust_0_e5f6",
+                    "text": "Measured end-to-end setup at 17.8s indexing 11,314 docs + 4.9s merging 138,743 terms = 22.7s one-time in Rust; queries then run without rebuilding via dictionary-in-RAM architecture.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Performance Measurement",
+                        "Index Construction",
+                        "Architectural Scaling"
+                    ],
+                    "metrics": [
+                        "17.8s",
+                        "4.9s",
+                        "22.7s",
+                        "138,743 terms"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/day-3-reading-from-disk.html"
+                }
             ]
         },
         {
@@ -1228,6 +2054,202 @@
                     "source": "resume",
                     "evidence_url": "https://github.com/sreenish27/filmsearch"
                 }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "proj_filmsearch_1_a1c2",
+                    "text": "Built a semantic film search engine over 54K+ Wikipedia-scraped documents using Scrapy, BM25 ranking, and PostgreSQL/Supabase, serving queries through a React/Next.js frontend deployed on Vercel.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Scrapy",
+                        "BM25",
+                        "PostgreSQL",
+                        "Supabase",
+                        "React",
+                        "Next.js",
+                        "Vercel"
+                    ],
+                    "metrics": [
+                        "54K+ films"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_b3d4",
+                    "text": "Improved retrieval relevance 35% over baseline string-match by implementing Okapi BM25 from scratch in Python with multi-zone TF-IDF tables (title, plot, actors, director) and tuned k1=1.5, b=0.75.",
+                    "format": "XYZ",
+                    "skills": [
+                        "BM25",
+                        "Okapi BM25",
+                        "TF-IDF",
+                        "Multi-Zone Ranking",
+                        "Python"
+                    ],
+                    "metrics": [
+                        "35%",
+                        "k1=1.5",
+                        "b=0.75"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch-v2-multi-zone-bm25.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_c5e6",
+                    "text": "Turned 0-result queries into useful ones by designing iterative query relaxation in Python, pre-computing per-word composite importance scores and dropping the least-important term until results exceed 3.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Query Relaxation",
+                        "Recall Optimization",
+                        "Python"
+                    ],
+                    "metrics": [
+                        "MIN_RESULTS_THRESHOLD=3"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch-v2-multi-zone-bm25.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_d7f8",
+                    "text": "Routed BM25 scoring to the most relevant zones by building a semantic pre-filter using sentence-transformers/all-MiniLM-L6-v2, encoding queries and zone names as 384-dim vectors with cosine similarity.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Sentence Transformers",
+                        "MiniLM",
+                        "Vector Embeddings",
+                        "Cosine Similarity",
+                        "Hugging Face"
+                    ],
+                    "metrics": [
+                        "384-dim"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch-v2-multi-zone-bm25.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_e9a0",
+                    "text": "Shipped v1 using Llama 3.1 70B via Groq with 384-dim pgvector embeddings; diagnosed vector-only retrieval as zone-blind, then rebuilt v2 in four weeks using classical BM25 + multi-zone scoring.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Llama 3.1",
+                        "pgvector",
+                        "Groq",
+                        "BM25",
+                        "Iterative Development"
+                    ],
+                    "metrics": [
+                        "four weeks"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch-v1-failed-attempt.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_f1b2",
+                    "text": "Validated retrieval quality when a startup founder used filmsearch to surface a niche Japanese animated film unsearchable elsewhere, providing unsolicited evidence of product-market fit.",
+                    "format": "XYZ",
+                    "skills": [
+                        "User Validation",
+                        "Product-Market Fit"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_a3c4",
+                    "text": "Built the data pipeline end-to-end using Scrapy for Wikipedia crawling, Pandas + NLTK for text preprocessing, and Scikit-learn for vectorization, serving results through a Node.js/Express API.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Scrapy",
+                        "Pandas",
+                        "NLTK",
+                        "Scikit-learn",
+                        "Node.js",
+                        "Express.js"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_b5d6",
+                    "text": "Identified system bottlenecks by documenting multiple-DB-call latency, BM25 document-length approximation errors, and the case for hybrid lexical+semantic scoring in the project README.",
+                    "format": "XYZ",
+                    "skills": [
+                        "System Analysis",
+                        "Technical Writing",
+                        "Performance Diagnosis"
+                    ],
+                    "metrics": [],
+                    "source": "website",
+                    "evidence_url": "https://github.com/sreenish27/filmsearch"
+                },
+                {
+                    "id": "proj_filmsearch_1_c7e8",
+                    "text": "Published a 4-minute Medium deep-dive walking through the BM25 formula, query relaxation logic, and semantic vector layer, supplemented with a Loom video walkthrough of the codebase.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Technical Writing",
+                        "Building in Public"
+                    ],
+                    "metrics": [
+                        "4-min read"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://medium.com/@krithikintl"
+                },
+                {
+                    "id": "proj_filmsearch_1_d9f0",
+                    "text": "Built v1 on Next.js, Node/Express, FastAPI, and Llama 3.1 70B via Groq with pgvector embeddings, distilling 95+ scraped fields per film into 12 structured fields before pivoting to BM25.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Next.js",
+                        "FastAPI",
+                        "Llama 3.1",
+                        "pgvector",
+                        "Schema Design"
+                    ],
+                    "metrics": [
+                        "95+ fields",
+                        "12 structured fields"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch-v1-failed-attempt.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_e1g2",
+                    "text": "Designed v2 schema with four cooperating PostgreSQL tables (Zone Importance, per-zone TF-IDF, AllFilms, Zone Vectors), routing each query to top-3 zones per term via cosine similarity lookups.",
+                    "format": "XYZ",
+                    "skills": [
+                        "PostgreSQL",
+                        "Schema Design",
+                        "BM25",
+                        "Query Routing"
+                    ],
+                    "metrics": [
+                        "4 tables",
+                        "top-3 zones"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/filmsearch-v2-multi-zone-bm25.html"
+                },
+                {
+                    "id": "proj_filmsearch_1_f3h4",
+                    "text": "Achieved 12x throughput over Python by porting the BM25 scoring kernel to C++ for 54K documents, leveraging contiguous memory layout and compiler-optimized inner loops for benchmarking.",
+                    "format": "XYZ",
+                    "skills": [
+                        "C++",
+                        "Performance Optimization",
+                        "BM25",
+                        "Systems Programming"
+                    ],
+                    "metrics": [
+                        "12x throughput",
+                        "54K documents"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/filmsearch"
+                }
             ]
         },
         {
@@ -1321,6 +2343,69 @@
                     "source": "github",
                     "evidence_url": "https://github.com/sreenish27/voyantra"
                 }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "proj_voyantra_2_a1b2",
+                    "text": "Shipped Voyantra, a MERN-stack travel planner using MongoDB, Express, React, and Node.js, integrating the Amadeus API for real-time flight/hotel/rental data with JWT auth and Tailwind CSS frontend.",
+                    "format": "XYZ",
+                    "skills": [
+                        "MongoDB",
+                        "Express.js",
+                        "React",
+                        "Node.js",
+                        "Tailwind CSS",
+                        "JWT",
+                        "Amadeus API"
+                    ],
+                    "metrics": [
+                        "103 commits"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/voyantra"
+                },
+                {
+                    "id": "proj_voyantra_2_b3c4",
+                    "text": "Replaced multi-tab booking flows by designing a unified itinerary input API (dates, guests, origin, destination) returning flight, hotel, and rental results in one bookable REST response.",
+                    "format": "XYZ",
+                    "skills": [
+                        "REST API Design",
+                        "API Design",
+                        "UX Engineering"
+                    ],
+                    "metrics": [],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/voyantra"
+                },
+                {
+                    "id": "proj_voyantra_2_c5d6",
+                    "text": "Built real-time collaborative itineraries using REST API contracts and a MongoDB schema handling concurrent multi-user updates, refreshing travel options when any participant adjusts dates.",
+                    "format": "XYZ",
+                    "skills": [
+                        "MongoDB",
+                        "REST APIs",
+                        "Concurrency",
+                        "Real-Time Sync"
+                    ],
+                    "metrics": [],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/voyantra"
+                },
+                {
+                    "id": "proj_voyantra_2_d7e8",
+                    "text": "Owned the full stack as solo builder: React + Tailwind CSS frontend, Express/Node backend with modular controllers and service layers, integrating Amadeus API and JWT auth end-to-end.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Full-Stack Development",
+                        "React",
+                        "Express.js",
+                        "JWT",
+                        "Modular Architecture"
+                    ],
+                    "metrics": [],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/voyantra"
+                }
             ]
         },
         {
@@ -1400,6 +2485,56 @@
                     ],
                     "source": "github",
                     "evidence_url": "https://chuckle-box.vercel.app/"
+                }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "proj_chucklebox_3_a1b2",
+                    "text": "Built ChuckleBox in 1 day on AWS SageMaker (Python) with a ~16-person team, implementing an audio-to-punchline pipeline (ingest, transcribe, segment laughter, surface timestamps) to win the hackathon.",
+                    "format": "XYZ",
+                    "skills": [
+                        "AWS SageMaker",
+                        "Python",
+                        "Audio Processing",
+                        "ML Inference",
+                        "Speech-to-Text"
+                    ],
+                    "metrics": [
+                        "1 day",
+                        "~16-person team"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sundai-club/laughter_slander"
+                },
+                {
+                    "id": "proj_chucklebox_3_b3c4",
+                    "text": "Built the inference pipeline end-to-end using Python: audio chunking, speech-to-text transcription, laugh detection against trained checkpoints, and timestamp emission, packaged in Docker.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Python",
+                        "Docker",
+                        "Audio Segmentation",
+                        "ML Inference Pipelines",
+                        "Speech-to-Text"
+                    ],
+                    "metrics": [],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sundai-club/laughter_slander"
+                },
+                {
+                    "id": "proj_chucklebox_3_c5d6",
+                    "text": "Validated the pipeline by testing against real recorded audio from MIT's Building E39 and shipping a live demo at chuckle-box.vercel.app, proving end-to-end audio ML can ship in a single day.",
+                    "format": "XYZ",
+                    "skills": [
+                        "End-to-End Deployment",
+                        "Live Demos",
+                        "Vercel"
+                    ],
+                    "metrics": [
+                        "55 commits"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://chuckle-box.vercel.app"
                 }
             ]
         },
@@ -1503,6 +2638,84 @@
                     ],
                     "source": "website",
                     "evidence_url": "https://krithik.xyz/how-i-use-ai-the-tutor.html"
+                }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "proj_learningskill_4_a1b2",
+                    "text": "Built a Claude skill with three modes (Diagnose, Plan, Coach), eight rules, and five retrieval grades using structured Markdown, fighting the fluency illusion before opening Manning's IR textbook.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Claude Skills",
+                        "Spaced Repetition",
+                        "System Design"
+                    ],
+                    "metrics": [
+                        "3 modes",
+                        "8 rules",
+                        "5 grades"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/learning-skill"
+                },
+                {
+                    "id": "proj_learningskill_4_b3c4",
+                    "text": "Designed an adaptive spaced-repetition scheduler where clean retrievals double the interval (1d→3d→1w→2w→1m→3m) and fuzzy retrievals shrink it, recomputing per rep by grade using a state machine.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Spaced Repetition",
+                        "Adaptive Scheduling",
+                        "State Machines"
+                    ],
+                    "metrics": [
+                        "6-step interval ladder"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/learning-skill"
+                },
+                {
+                    "id": "proj_learningskill_4_c5d6",
+                    "text": "Built a flinch-pattern tracker using structured logging that catalogs evasion behaviors (mechanics-dumping, articles-as-reps) and pushes back when they recur, enforcing retrieval honesty.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Behavioral Design",
+                        "Structured Logging",
+                        "Pattern Detection"
+                    ],
+                    "metrics": [],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/learning-skill"
+                },
+                {
+                    "id": "proj_learningskill_4_d7e8",
+                    "text": "Architected the skill as four layered Markdown files (SKILL.md, OPERATING_PRINCIPLES, SESSION_SUMMARY, learning_log) using a read-frequency hierarchy so context survives between sessions.",
+                    "format": "XYZ",
+                    "skills": [
+                        "System Architecture",
+                        "Context Engineering",
+                        "File-Based State"
+                    ],
+                    "metrics": [
+                        "4 files"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/learning-skill"
+                },
+                {
+                    "id": "proj_learningskill_4_e9f0",
+                    "text": "Produced 7+ shipped articles and 12 Rust files by using the skill as the harness for the search engine build, with a learning log that caught fuzzy retrievals self-grading would have missed.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Self-Directed Learning",
+                        "Building in Public",
+                        "Rust"
+                    ],
+                    "metrics": [
+                        "7+ articles",
+                        "12 Rust files"
+                    ],
+                    "source": "resume",
+                    "evidence_url": "https://github.com/sreenish27/learning-skill"
                 }
             ]
         }
