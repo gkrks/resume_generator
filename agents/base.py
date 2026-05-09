@@ -2,9 +2,12 @@
 
 Supports prompt caching: pass `cached_system` to prepend a cached block
 (e.g., master_resume) before the agent-specific system prompt.
+
+Includes retry with exponential backoff for rate limits (429/529).
 """
 
 import json
+import time
 import anthropic
 from dotenv import load_dotenv
 
@@ -14,6 +17,9 @@ _client = anthropic.Anthropic()
 
 MODEL_SONNET = "claude-sonnet-4-20250514"
 MODEL_HAIKU = "claude-haiku-4-5-20251001"
+
+MAX_RETRIES = 3
+RETRY_DELAYS = [5, 10, 20]  # seconds
 
 
 def call_agent(
@@ -27,14 +33,8 @@ def call_agent(
 ) -> str:
     """Send a single-turn message via streaming with optional prompt caching.
 
-    Args:
-        system: Agent-specific system prompt.
-        user_message: The user message.
-        model: Model to use.
-        max_tokens: Max output tokens.
-        temperature: Sampling temperature.
-        cached_system: Optional large context (e.g., master_resume) to cache.
-                       Placed before `system` with a cache_control breakpoint.
+    Retries up to 3 times on rate limit (429) or overloaded (529) errors
+    with exponential backoff (5s, 10s, 20s).
     """
     if cached_system:
         system_blocks = [
@@ -48,17 +48,26 @@ def call_agent(
     else:
         system_blocks = system
 
-    text_parts = []
-    with _client.messages.stream(
-        model=model,
-        max_tokens=max_tokens,
-        temperature=temperature,
-        system=system_blocks,
-        messages=[{"role": "user", "content": user_message}],
-    ) as stream:
-        for text in stream.text_stream:
-            text_parts.append(text)
-    return "".join(text_parts)
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            text_parts = []
+            with _client.messages.stream(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                system=system_blocks,
+                messages=[{"role": "user", "content": user_message}],
+            ) as stream:
+                for text in stream.text_stream:
+                    text_parts.append(text)
+            return "".join(text_parts)
+
+        except (anthropic.RateLimitError, anthropic.InternalServerError) as e:
+            if attempt == MAX_RETRIES:
+                raise
+            delay = RETRY_DELAYS[attempt]
+            print(f"  [retry] {type(e).__name__} — waiting {delay}s (attempt {attempt + 1}/{MAX_RETRIES})")
+            time.sleep(delay)
 
 
 def call_agent_json(

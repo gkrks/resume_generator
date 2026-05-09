@@ -224,7 +224,7 @@ def _process_one_safe(item: dict) -> dict:
 
 # Default concurrency — safe for Anthropic Tier 1.
 # Increase to 5 (Tier 2), 8 (Tier 3), or 10-15 (Tier 4).
-DEFAULT_CONCURRENCY = int(os.environ.get("RESUME_CONCURRENCY", "3"))
+DEFAULT_CONCURRENCY = int(os.environ.get("RESUME_CONCURRENCY", "8"))
 
 
 def _warm_cache_for_batch(items: list[dict]) -> dict:
@@ -334,6 +334,8 @@ def process_all(limit: int = 10, concurrency: int | None = None) -> list[dict]:
     # Warm the prompt cache before parallel fan-out
     _warm_cache_for_batch(items)
 
+    STAGGER_DELAY = 5  # seconds between each parallel launch
+
     if workers == 1:
         # Sequential mode
         results = []
@@ -341,16 +343,23 @@ def process_all(limit: int = 10, concurrency: int | None = None) -> list[dict]:
             print(f"\n[{i}/{len(items)}] {item.get('title', '')} @ {item.get('company_name', '')}")
             results.append(_process_one_safe(item))
     else:
-        # Parallel mode
+        # Parallel mode with staggered launches
         from concurrent.futures import ThreadPoolExecutor, as_completed
+        import time
 
         results = []
         with ThreadPoolExecutor(max_workers=workers) as pool:
-            future_to_item = {
-                pool.submit(_process_one_safe, item): item
-                for item in items
-            }
-            for future in as_completed(future_to_item):
+            futures = {}
+            for i, item in enumerate(items):
+                if i > 0:
+                    print(f"  [stagger] Waiting {STAGGER_DELAY}s before launching next...")
+                    time.sleep(STAGGER_DELAY)
+                title = item.get('title', '')[:40]
+                company = item.get('company_name', '')
+                print(f"  [launch {i+1}/{len(items)}] {title} @ {company}")
+                futures[pool.submit(_process_one_safe, item)] = item
+
+            for future in as_completed(futures):
                 results.append(future.result())
 
     # Summary

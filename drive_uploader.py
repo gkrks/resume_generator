@@ -160,25 +160,49 @@ def upload_output_dir(output_dir: str, root_folder_id: str | None = None) -> dic
     service = _get_service()
     output_path = Path(output_dir)
 
-    # Extract tier/company/role/date path components
+    # Extract role_type/tier/company/role/date path components
+    # Local path: .../SWE/Strong/Meta/Software_Engineer/2026-05-09
     parts = output_path.parts
+    role_types = {"SWE", "PM", "TPM", "APM", "PLM"}
     tier_names = {"Strong", "Maybe", "DontWasteTime"}
-    tier_idx = None
+
+    # Find the role_type layer (SWE/PM/TPM) — it sits above the tier
+    role_idx = None
     for i, p in enumerate(parts):
-        if p in tier_names:
-            tier_idx = i
+        if p in role_types:
+            role_idx = i
             break
 
-    if tier_idx is not None:
-        folder_parts = list(parts[tier_idx:])
+    if role_idx is not None:
+        folder_parts = list(parts[role_idx:])
     else:
-        folder_parts = list(parts[-4:]) if len(parts) >= 4 else list(parts[-2:])
+        # Fallback: look for tier layer
+        tier_idx = None
+        for i, p in enumerate(parts):
+            if p in tier_names:
+                tier_idx = i
+                break
+        if tier_idx is not None:
+            folder_parts = list(parts[tier_idx:])
+        else:
+            folder_parts = list(parts[-5:]) if len(parts) >= 5 else list(parts[-2:])
 
     leaf_folder_id = _ensure_folder_path(service, root_id, folder_parts)
+
+    # Check existing files to avoid duplicates
+    existing = service.files().list(
+        q=f"'{leaf_folder_id}' in parents and trashed = false",
+        fields="files(name)",
+    ).execute()
+    existing_names = {f["name"] for f in existing.get("files", [])}
 
     results = {}
     for file_path in output_path.iterdir():
         if file_path.is_file():
+            name = file_path.name
+            if name in existing_names:
+                print(f"  Skipped (already exists): {name}")
+                continue
             uploaded = _upload_file(service, str(file_path), leaf_folder_id)
             link = uploaded.get("webViewLink", "")
             results[uploaded["name"]] = link
