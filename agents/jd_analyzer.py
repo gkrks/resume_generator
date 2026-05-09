@@ -5,7 +5,7 @@ buzz words from keywords, selects layout + experiences, and builds
 the keyword inventory.  Auto-picks the best option at every decision point.
 """
 
-from .base import call_agent_json, master_resume_cache_block
+from .base import call_agent_json, call_agent, master_resume_cache_block, MODEL_HAIKU
 
 SYSTEM = """\
 You are a resume-optimization expert.  You receive a job description (JD)
@@ -114,7 +114,7 @@ Return ONLY valid JSON.
 
 
 def analyze_jd(jd_text: str, master_resume: dict, role_type: str = "PM") -> dict:
-    """Analyze a single job description against the master resume."""
+    """Analyze a single job description against the master resume (Haiku)."""
     user_msg = (
         f"## Role Type: {role_type}\n\n"
         f"## Job Description\n\n{jd_text}\n\n"
@@ -125,6 +125,7 @@ def analyze_jd(jd_text: str, master_resume: dict, role_type: str = "PM") -> dict
     return call_agent_json(
         system=SYSTEM,
         user_message=user_msg,
+        model=MODEL_HAIKU,
         cached_system=master_resume_cache_block(master_resume),
     )
 
@@ -172,6 +173,7 @@ def analyze_jds_batch(
     raw = call_agent(
         system=BATCH_SYSTEM,
         user_message=user_msg,
+        model=MODEL_HAIKU,
         cached_system=master_resume_cache_block(master_resume),
         max_tokens=32768,
     )

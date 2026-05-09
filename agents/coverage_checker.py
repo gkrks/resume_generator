@@ -5,7 +5,7 @@ self-evaluation.  If any CRITICAL finding is detected, returns fix
 instructions so the orchestrator can loop back.
 """
 
-from .base import call_agent_json
+from .base import call_agent_json, MODEL_HAIKU
 
 SYSTEM = """\
 You are a resume coverage auditor.  Given the full pipeline state (JD analysis,
@@ -104,4 +104,4 @@ def check_coverage(
         "Be rigorous. Flag any CRITICAL issues that would require fixes."
     )
 
-    return call_agent_json(system=SYSTEM, user_message=user_msg, max_tokens=16384)
+    return call_agent_json(system=SYSTEM, user_message=user_msg, model=MODEL_HAIKU, max_tokens=16384)
