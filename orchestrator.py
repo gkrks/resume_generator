@@ -91,11 +91,13 @@ def _compute_checks(coverage_result: dict) -> dict:
     }
 
 
-def _build_output_dir(tier: str, company: str, role_title: str) -> Path:
+def _build_output_dir(role_type: str, tier: str, company: str, role_title: str) -> Path:
+    """Build: ~/Desktop/Resumes/{role_type}/{tier}/{Company}/{Role}/{date}/"""
+    role_type_dir = role_type.upper()  # SWE, PM, TPM, etc.
     company_dir = _sanitize(company)
     role_dir = _sanitize(role_title)
     today = date.today().isoformat()
-    out = RESUMES_ROOT / tier / company_dir / role_dir / today
+    out = RESUMES_ROOT / role_type_dir / tier / company_dir / role_dir / today
     out.mkdir(parents=True, exist_ok=True)
     return out
 
@@ -251,7 +253,7 @@ def run(
         out_dir = Path(output_base)
         out_dir.mkdir(parents=True, exist_ok=True)
     else:
-        out_dir = _build_output_dir(tier, company, role)
+        out_dir = _build_output_dir(role_type, tier, company, role)
     _log("4/5", f"Output: {out_dir}")
 
     # ── Step 5: Cover Letter + Outreach + File Gen (parallel) ────
