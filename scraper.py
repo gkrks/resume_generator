@@ -43,6 +43,12 @@ def _detect_platform(url: str) -> str:
         return "icims"
     if "jobvite.com" in host:
         return "jobvite"
+    if "google.com" in host and "careers" in (host + path):
+        return "google"
+    if "careers.google.com" in host:
+        return "google"
+    if "amazon.jobs" in host:
+        return "amazon"
     return "generic"
 
 
@@ -149,46 +155,14 @@ def _scrape_greenhouse(url: str) -> str:
 
 
 def _scrape_ashby(url: str) -> str:
-    """Ashby public API."""
-    # URL: https://jobs.ashbyhq.com/{company}/{job_id}
-    parts = urlparse(url).path.strip("/").split("/")
-    if len(parts) < 2:
-        return _scrape_with_httpx(url)
-
-    job_id = parts[-1]
-
-    api_url = "https://jobs.ashbyhq.com/api/non-user-graphql"
-    payload = {
-        "operationName": "ApiJobPosting",
-        "variables": {"jobPostingId": job_id},
-        "query": """
-            query ApiJobPosting($jobPostingId: String!) {
-                jobPosting(id: $jobPostingId) {
-                    title
-                    locationName
-                    descriptionHtml
-                    departmentName
-                }
-            }
-        """,
-    }
-
-    try:
-        resp = httpx.post(api_url, json=payload, timeout=15)
-        resp.raise_for_status()
-        data = resp.json().get("data", {}).get("jobPosting", {})
-
-        sections = []
-        sections.append(f"Role: {data.get('title', '')}")
-        sections.append(f"Location: {data.get('locationName', '')}")
-        sections.append(f"Department: {data.get('departmentName', '')}")
-        sections.append("")
-        sections.append(_html_to_text(data.get("descriptionHtml", "")))
-
-        return "\n".join(sections).strip()
-    except Exception as e:
-        print(f"  Ashby API failed: {e}")
-        return _scrape_with_httpx(url)
+    """Ashby — Playwright with targeted selectors (API is unreliable)."""
+    return _scrape_with_playwright(url, selectors=[
+        "[class*='ashby-job-posting-brief-description']",
+        "[class*='jobPosting']",
+        "[class*='job-posting']",
+        "main",
+        "body",
+    ])
 
 
 def _scrape_smartrecruiters(url: str) -> str:
@@ -312,6 +286,88 @@ def _scrape_workday(url: str) -> str:
     ])
 
 
+def _scrape_google(url: str) -> str:
+    """Google Careers — Playwright with specific content selectors."""
+    return _scrape_with_playwright(url, selectors=[
+        "[class*='gc-card__content']",
+        "[class*='gc-job-detail']",
+        "[data-id='job-detail']",
+        ".content-card",
+        "gc-job-detail",
+        "main",
+        "body",
+    ])
+
+
+def _scrape_amazon(url: str) -> str:
+    """Amazon Jobs — heavy bot protection, use Playwright with stealth."""
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=[
+                    "--disable-blink-features=AutomationControlled",
+                    "--no-sandbox",
+                ],
+            )
+            context = browser.new_context(
+                user_agent=(
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/120.0.0.0 Safari/537.36"
+                ),
+                viewport={"width": 1280, "height": 900},
+                java_script_enabled=True,
+            )
+            # Remove webdriver flag
+            context.add_init_script("""
+                Object.defineProperty(navigator, 'webdriver', {get: () => false});
+            """)
+
+            page = context.new_page()
+            page.route("**/*.{png,jpg,jpeg,gif,svg,webp,woff,woff2,ttf,mp4,webm}",
+                       lambda route: route.abort())
+
+            page.goto(url, wait_until="domcontentloaded", timeout=45000)
+
+            # Amazon Jobs loads content dynamically — wait for it
+            try:
+                page.wait_for_selector("#job-detail-body, .job-detail, [class*='jobDetail']",
+                                       timeout=15000)
+            except PWTimeoutError:
+                pass
+
+            page.wait_for_timeout(3000)
+
+            text = ""
+            for selector in [
+                "#job-detail-body",
+                ".job-detail",
+                "[class*='jobDetail']",
+                "[class*='job-description']",
+                "main",
+                "body",
+            ]:
+                try:
+                    el = page.query_selector(selector)
+                    if el:
+                        text = el.inner_text()
+                        if len(text) > 200:
+                            break
+                except Exception:
+                    continue
+
+            if len(text) < 200:
+                text = page.inner_text("body")
+
+            browser.close()
+            return text.strip()
+
+    except Exception as e:
+        print(f"  WARNING: Amazon scraper failed: {e}")
+        return ""
+
+
 def _scrape_linkedin(url: str) -> str:
     """LinkedIn — try the public view first, fall back to Playwright."""
     return _scrape_with_playwright(url, selectors=[
@@ -372,6 +428,8 @@ _SCRAPERS = {
     "meta": _scrape_meta,
     "workday": _scrape_workday,
     "linkedin": _scrape_linkedin,
+    "google": _scrape_google,
+    "amazon": _scrape_amazon,
 }
 
 
