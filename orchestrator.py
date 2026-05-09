@@ -134,12 +134,13 @@ def _enforce_keyword_coverage(jd_analysis: dict, skills_data: dict) -> dict:
 
 
 def _build_output_dir(role_type: str, tier: str, company: str, role_title: str) -> Path:
-    """Build: ~/Desktop/Resumes/{role_type}/{tier}/{Company}/{Role}/{date}/"""
+    """Build: ~/Desktop/Resumes/{role_type}/{date}/{tier}/{Company}/{Role}/"""
     role_type_dir = role_type.upper()  # SWE, PM, TPM, etc.
+    today = date.today()
+    date_dir = today.strftime("%-d %b")  # "8 May", "9 May"
     company_dir = _sanitize(company)
     role_dir = _sanitize(role_title)
-    today = date.today().isoformat()
-    out = RESUMES_ROOT / role_type_dir / tier / company_dir / role_dir / today
+    out = RESUMES_ROOT / role_type_dir / date_dir / tier / company_dir / role_dir
     out.mkdir(parents=True, exist_ok=True)
     return out
 

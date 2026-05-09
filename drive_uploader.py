@@ -160,13 +160,12 @@ def upload_output_dir(output_dir: str, root_folder_id: str | None = None) -> dic
     service = _get_service()
     output_path = Path(output_dir)
 
-    # Extract role_type/tier/company/role/date path components
-    # Local path: .../SWE/Strong/Meta/Software_Engineer/2026-05-09
+    # Extract role_type/date/tier/company/role path components
+    # Local path: .../SWE/9 May/Strong/Meta/Software_Engineer
     parts = output_path.parts
     role_types = {"SWE", "PM", "TPM", "APM", "PLM"}
-    tier_names = {"Strong", "Maybe", "DontWasteTime"}
 
-    # Find the role_type layer (SWE/PM/TPM) — it sits above the tier
+    # Find the role_type layer (SWE/PM/TPM) — it's the top-level grouping
     role_idx = None
     for i, p in enumerate(parts):
         if p in role_types:
@@ -176,16 +175,8 @@ def upload_output_dir(output_dir: str, root_folder_id: str | None = None) -> dic
     if role_idx is not None:
         folder_parts = list(parts[role_idx:])
     else:
-        # Fallback: look for tier layer
-        tier_idx = None
-        for i, p in enumerate(parts):
-            if p in tier_names:
-                tier_idx = i
-                break
-        if tier_idx is not None:
-            folder_parts = list(parts[tier_idx:])
-        else:
-            folder_parts = list(parts[-5:]) if len(parts) >= 5 else list(parts[-2:])
+        # Fallback: use last 5 components
+        folder_parts = list(parts[-5:]) if len(parts) >= 5 else list(parts[-2:])
 
     leaf_folder_id = _ensure_folder_path(service, root_id, folder_parts)
 
