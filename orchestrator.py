@@ -91,6 +91,48 @@ def _compute_checks(coverage_result: dict) -> dict:
     }
 
 
+def _enforce_keyword_coverage(jd_analysis: dict, skills_data: dict) -> dict:
+    """Programmatically inject any missing Basic-Qual keywords into skills.
+
+    The LLM sometimes omits keywords even when told to include them.
+    This is a deterministic safety net that runs after the agent call.
+    Missing keywords get appended to the last skills category.
+    """
+    # Get all Basic-Qual keywords (embed_target = "Required")
+    inventory = jd_analysis.get("keyword_inventory", [])
+    required_keywords = [
+        k["keyword"] for k in inventory
+        if k.get("embed_target", "").lower() == "required"
+    ]
+
+    if not required_keywords:
+        return skills_data
+
+    # Check which are already present (case-insensitive)
+    skills_lines = skills_data.get("skills", [])
+    all_skills_text = " | ".join(s.get("list", "") for s in skills_lines).lower()
+
+    missing = []
+    for kw in required_keywords:
+        if kw.lower() not in all_skills_text:
+            missing.append(kw)
+
+    if not missing:
+        return skills_data
+
+    # Append missing keywords to the last category
+    if skills_lines:
+        last = skills_lines[-1]
+        current_list = last.get("list", "")
+        appended = ", ".join(missing)
+        new_list = f"{current_list}, {appended}" if current_list else appended
+        last["list"] = new_list
+        last["char_count"] = len(f"{last['name']}: {new_list}")
+        print(f"  [keyword-enforce] Injected missing keywords into '{last['name']}': {missing}")
+
+    return skills_data
+
+
 def _build_output_dir(role_type: str, tier: str, company: str, role_title: str) -> Path:
     """Build: ~/Desktop/Resumes/{role_type}/{tier}/{Company}/{Role}/{date}/"""
     role_type_dir = role_type.upper()  # SWE, PM, TPM, etc.
@@ -210,6 +252,10 @@ def run(
     skills_data = merged.get("skills", {})
     summary = summary_data.get("selected", "")
     _log("2/5", f"Summary ({summary_data.get('selected_char_count', len(summary))} chars): {summary[:80]}...")
+
+    # Enforce: inject any missing Basic-Qual keywords into the skills section
+    skills_data = _enforce_keyword_coverage(jd_analysis, skills_data)
+
     for s in skills_data.get("skills", []):
         _log("2/5", f"  {s['name']}: {s['list'][:60]}... ({s.get('char_count', '?')} chars)")
 
@@ -232,14 +278,24 @@ def run(
 
         critical_fixes = coverage_result.get("critical_fixes", [])
         _log("4/5", f"CRITICAL fixes needed: {len(critical_fixes)}")
+        for fix in critical_fixes:
+            _log("4/5", f"  - {fix.get('issue', '')[:80]}")
 
-        if any(f.get("target_step") in ("skills", "bullets") for f in critical_fixes):
-            merged = write_summary_and_skills(jd_analysis, master_resume, role_type)
+        # Re-run with fix instructions so agents know exactly what to change
+        if any(f.get("target_step") in ("skills", "bullets", "summary") for f in critical_fixes):
+            merged = write_summary_and_skills(
+                jd_analysis, master_resume, role_type,
+                fix_instructions=critical_fixes,
+            )
             skills_data = merged.get("skills", {})
-            if any(f.get("target_step") == "summary" for f in critical_fixes):
-                summary_data = merged.get("summary", {})
-                summary = summary_data.get("selected", "")
-            bullet_result = match_bullets(jd_analysis, skills_data, master_resume)
+            # Re-enforce keywords after every re-run
+            skills_data = _enforce_keyword_coverage(jd_analysis, skills_data)
+            summary_data = merged.get("summary", {})
+            summary = summary_data.get("selected", "")
+            bullet_result = match_bullets(
+                jd_analysis, skills_data, master_resume,
+                fix_instructions=critical_fixes,
+            )
 
     # Compute checks and tier
     checks = _compute_checks(coverage_result)

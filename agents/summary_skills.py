@@ -93,13 +93,41 @@ Return ONLY valid JSON.
 """
 
 
-def write_summary_and_skills(jd_analysis: dict, master_resume: dict, role_type: str) -> dict:
-    """Generate summary and skills in one call. Returns merged result."""
+def write_summary_and_skills(
+    jd_analysis: dict,
+    master_resume: dict,
+    role_type: str,
+    fix_instructions: list[dict] | None = None,
+) -> dict:
+    """Generate summary and skills in one call. Returns merged result.
+
+    Args:
+        fix_instructions: Optional list of critical fixes from the coverage checker.
+            Each has 'issue' and 'fix' keys. When provided, the agent is told
+            exactly what keywords/skills to add.
+    """
     import json
 
     user_msg = (
         f"## Role Type: {role_type}\n\n"
         f"## JD Analysis\n\n```json\n{json.dumps(jd_analysis, indent=2)}\n```\n\n"
+    )
+
+    if fix_instructions:
+        user_msg += "## CRITICAL FIXES REQUIRED FROM PREVIOUS ROUND\n\n"
+        user_msg += "The coverage checker found these problems. You MUST fix them:\n\n"
+        for fix in fix_instructions:
+            user_msg += f"- **{fix.get('issue', '')}** → {fix.get('fix', '')}\n"
+        user_msg += (
+            "\nInclude the EXACT keywords listed above in the skills section. "
+            "Do not paraphrase them — use the literal terms. "
+            "For example, if it says add 'API Design', write 'API Design' not 'REST APIs'. "
+            "If it says add 'Unit Testing', write 'Unit Testing' not 'Testing'. "
+            "If it says add 'Large Language Models', write 'Large Language Models' or 'LLMs'. "
+            "If it says add 'AI Agents', write 'AI Agents'.\n\n"
+        )
+
+    user_msg += (
         "Generate 3 summary candidates (pick the best) AND the 3-category skills section. "
         "Use the master resume from your system prompt as the source of truth."
     )

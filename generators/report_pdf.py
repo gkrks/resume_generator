@@ -216,7 +216,16 @@ def generate_report_pdf(
     level_type = " | ".join(p for p in [seniority, emp_type] if p)
     ats = meta.get("ats_platform", "")
     layout = jd_analysis.get("layout", "")
-    layout_str = f"{layout} ({'4 exp + 1 proj' if layout == '3+' else '3 exp + 2 proj'})" if layout else ""
+    if layout == "3+":
+        layout_str = "3+ (4 exp + 1 proj)"
+    elif layout == "swe":
+        layout_str = "swe (4 exp + 2 proj)"
+    elif layout == "0-2":
+        layout_str = "0-2 (3 exp + 2 proj)"
+    elif layout:
+        layout_str = layout
+    else:
+        layout_str = ""
     listing_id = meta.get("listing_id", "")
     queue_id = meta.get("queue_id", "")
 

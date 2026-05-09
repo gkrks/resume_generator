@@ -117,6 +117,7 @@ def match_bullets(
     jd_analysis: dict,
     skills_result: dict,
     master_resume: dict,
+    fix_instructions: list[dict] | None = None,
 ) -> dict:
     """Batch-match all requirements and rewrite all bullets in one pass."""
     import json
@@ -124,6 +125,20 @@ def match_bullets(
     user_msg = (
         f"## JD Analysis\n\n```json\n{json.dumps(jd_analysis, indent=2)}\n```\n\n"
         f"## Locked Skills\n\n```json\n{json.dumps(skills_result, indent=2)}\n```\n\n"
+    )
+
+    if fix_instructions:
+        bullet_fixes = [f for f in fix_instructions if f.get("target_step") == "bullets"]
+        if bullet_fixes:
+            user_msg += "## CRITICAL FIXES REQUIRED FROM PREVIOUS ROUND\n\n"
+            for fix in bullet_fixes:
+                user_msg += f"- **{fix.get('issue', '')}** → {fix.get('fix', '')}\n"
+            user_msg += (
+                "\nYou MUST address the fixes above. Embed the missing keywords "
+                "into bullet rewrites where semantically justified by the master resume.\n\n"
+            )
+
+    user_msg += (
         "Match ALL requirements to bullets from the master resume in your system prompt. "
         "Rewrite them following the first-bullet rule for the most recent experience. "
         "Respect the 225-char limit. Every requirement must appear as a row "

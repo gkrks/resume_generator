@@ -14,6 +14,7 @@ from supabase_client import (
     fetch_pending_queue_items,
     fetch_job_listing,
     mark_resume_completed,
+    is_us_location,
 )
 from orchestrator import run as run_pipeline
 from scraper import scrape_jd
@@ -153,6 +154,15 @@ def process_one(queue_item: dict) -> dict:
     listing = fetch_job_listing(listing_id)
     if not listing:
         raise ValueError(f"job_listings row not found for listing_id={listing_id}")
+
+    # Strict US-only check on the listing's location (second layer of defense)
+    listing_loc = listing.get("location_raw", "")
+    if not is_us_location(listing_loc):
+        print(f"  SKIPPED: Non-US location on job_listing: [{listing_loc}]")
+        print(f"  Title: {title} @ {company}")
+        return {"output_dir": "", "tier": "Skipped", "checks": {
+            "ats_check": False, "recruiter_check": False, "hr_check": False,
+        }}
 
     # Build the JD text
     jd_text = _build_jd_text(listing, queue_item)
