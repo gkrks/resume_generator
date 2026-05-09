@@ -11,13 +11,14 @@ env:
   ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
   SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-  GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+  GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
   GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
   RESUMES_OUTPUT_DIR: /tmp/resumes
 
 jobs:
   process-queue:
     runs-on: ubuntu-latest
+    environment: RESUME
     timeout-minutes: 30
 
     steps:
@@ -37,7 +38,10 @@ jobs:
           cache: "npm"
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt google-auth google-api-python-client
+        run: pip install -r requirements.txt playwright
+
+      - name: Install Playwright browser
+        run: python -m playwright install chromium --with-deps
 
       - name: Install Node dependencies
         run: npm ci
