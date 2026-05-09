@@ -109,11 +109,7 @@ Return ONLY valid JSON.
 
 
 def analyze_jd(jd_text: str, master_resume: dict, role_type: str = "PM") -> dict:
-    """Analyze a job description against the master resume.
-
-    Returns structured analysis with requirements, keyword inventory,
-    and recommended experience/project selection.
-    """
+    """Analyze a single job description against the master resume."""
     user_msg = (
         f"## Role Type: {role_type}\n\n"
         f"## Job Description\n\n{jd_text}\n\n"
@@ -126,3 +122,77 @@ def analyze_jd(jd_text: str, master_resume: dict, role_type: str = "PM") -> dict
         user_message=user_msg,
         cached_system=master_resume_cache_block(master_resume),
     )
+
+
+BATCH_SYSTEM = SYSTEM + """
+
+## BATCH MODE
+
+You are analyzing MULTIPLE job descriptions in one call.
+Return a JSON array — one analysis object per JD, in the same order.
+Each object follows the exact same schema as single-JD mode.
+
+```json
+[
+  { "company": "...", "role_title": "...", ... },
+  { "company": "...", "role_title": "...", ... }
+]
+```
+
+Return ONLY the JSON array.
+"""
+
+
+def analyze_jds_batch(
+    jd_items: list[dict],
+    master_resume: dict,
+) -> list[dict]:
+    """Analyze multiple JDs in one API call.
+
+    Args:
+        jd_items: List of {"jd_text": str, "role_type": str} dicts.
+        master_resume: The full master resume.
+
+    Returns:
+        List of analysis dicts, one per JD, in the same order.
+    """
+    user_msg = f"Analyze these {len(jd_items)} job descriptions:\n\n"
+    for i, item in enumerate(jd_items, 1):
+        user_msg += f"### JD #{i} (Role Type: {item['role_type']})\n\n"
+        user_msg += item["jd_text"]
+        user_msg += "\n\n---\n\n"
+
+    user_msg += f"Return a JSON array with {len(jd_items)} analysis objects, one per JD above."
+
+    raw = call_agent(
+        system=BATCH_SYSTEM,
+        user_message=user_msg,
+        cached_system=master_resume_cache_block(master_resume),
+        max_tokens=32768,
+    )
+
+    # Parse — could be a JSON array directly or in fences
+    from .base import _parse_json
+    import json
+
+    raw = raw.strip()
+    # Try as array first
+    try:
+        result = json.loads(raw)
+        if isinstance(result, list):
+            return result
+    except json.JSONDecodeError:
+        pass
+
+    # Extract from fences
+    if "```json" in raw:
+        start = raw.index("```json") + 7
+        end = raw.index("```", start)
+        result = json.loads(raw[start:end].strip())
+        if isinstance(result, list):
+            return result
+
+    # Try finding [ ... ]
+    first = raw.index("[")
+    last = raw.rindex("]") + 1
+    return json.loads(raw[first:last])

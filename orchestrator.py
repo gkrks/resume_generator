@@ -266,7 +266,7 @@ def run(
     total = tracker.get("total", {})
     _log("3/5", f"Bullets locked: {total.get('locked', '?')}/{total.get('allocated', '?')}")
 
-    # ── Step 4: Coverage Check (Sonnet, no cache needed) ─────────
+    # ── Step 4: Coverage Check (with early exit + stateful fix loop) ──
     _log("4/5", "Running coverage check + self-evaluation...")
     for fix_round in range(MAX_FIX_LOOPS + 1):
         coverage_result = check_coverage(jd_analysis, summary, skills_data, bullet_result)
@@ -281,20 +281,34 @@ def run(
         for fix in critical_fixes:
             _log("4/5", f"  - {fix.get('issue', '')[:80]}")
 
-        # Re-run with fix instructions so agents know exactly what to change
+        # Early exit: if all 3 checks fail on round 0, the gap is genuine
+        # — fix loops won't help, skip them to save 2 API calls per agent
+        if fix_round == 0:
+            checks_preview = _compute_checks(coverage_result)
+            if not any([checks_preview["ats_check"], checks_preview["recruiter_check"],
+                        checks_preview["hr_check"]]):
+                _log("4/5", "Early exit: all 3 checks failed on round 0 — gap is genuine, skipping fix loops")
+                break
+
+        # Re-run with fix instructions AND previous good state
         if any(f.get("target_step") in ("skills", "bullets", "summary") for f in critical_fixes):
+            previous_merged = {"summary": summary_data, "skills": skills_data}
+            previous_bullets = bullet_result.get("final_bullets", {})
+
             merged = write_summary_and_skills(
                 jd_analysis, master_resume, role_type,
                 fix_instructions=critical_fixes,
+                previous_output=previous_merged,
             )
             skills_data = merged.get("skills", {})
-            # Re-enforce keywords after every re-run
             skills_data = _enforce_keyword_coverage(jd_analysis, skills_data)
             summary_data = merged.get("summary", {})
             summary = summary_data.get("selected", "")
+
             bullet_result = match_bullets(
                 jd_analysis, skills_data, master_resume,
                 fix_instructions=critical_fixes,
+                previous_bullets=previous_bullets,
             )
 
     # Compute checks and tier

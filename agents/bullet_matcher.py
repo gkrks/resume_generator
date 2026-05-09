@@ -118,8 +118,16 @@ def match_bullets(
     skills_result: dict,
     master_resume: dict,
     fix_instructions: list[dict] | None = None,
+    previous_bullets: dict | None = None,
 ) -> dict:
-    """Batch-match all requirements and rewrite all bullets in one pass."""
+    """Batch-match all requirements and rewrite all bullets in one pass.
+
+    Args:
+        fix_instructions: Critical fixes from the coverage checker.
+        previous_bullets: The final_bullets dict from the previous round.
+            When provided, the agent preserves bullets that passed and
+            only modifies what the fixes specify.
+    """
     import json
 
     user_msg = (
@@ -127,15 +135,34 @@ def match_bullets(
         f"## Locked Skills\n\n```json\n{json.dumps(skills_result, indent=2)}\n```\n\n"
     )
 
-    if fix_instructions:
+    if previous_bullets and fix_instructions:
         bullet_fixes = [f for f in fix_instructions if f.get("target_step") == "bullets"]
+        user_msg += "## PREVIOUS ROUND BULLETS (PRESERVE WHAT WORKS)\n\n"
+        user_msg += (
+            "These bullets were generated in the previous round. Most PASSED the "
+            "coverage checker. **Keep every bullet that was working. Only modify "
+            "the specific bullets called out in the fixes below.** Do NOT rewrite "
+            "bullets that already passed unless a fix explicitly targets them.\n\n"
+        )
+        user_msg += f"```json\n{json.dumps(previous_bullets, indent=2)}\n```\n\n"
+
         if bullet_fixes:
-            user_msg += "## CRITICAL FIXES REQUIRED FROM PREVIOUS ROUND\n\n"
+            user_msg += "## CRITICAL FIXES — MODIFY ONLY THESE\n\n"
             for fix in bullet_fixes:
                 user_msg += f"- **{fix.get('issue', '')}** → {fix.get('fix', '')}\n"
             user_msg += (
-                "\nYou MUST address the fixes above. Embed the missing keywords "
-                "into bullet rewrites where semantically justified by the master resume.\n\n"
+                "\nEmbed the missing keywords into bullet rewrites where semantically "
+                "justified by the master resume. Do NOT touch bullets that already passed.\n\n"
+            )
+    elif fix_instructions:
+        bullet_fixes = [f for f in fix_instructions if f.get("target_step") == "bullets"]
+        if bullet_fixes:
+            user_msg += "## CRITICAL FIXES REQUIRED\n\n"
+            for fix in bullet_fixes:
+                user_msg += f"- **{fix.get('issue', '')}** → {fix.get('fix', '')}\n"
+            user_msg += (
+                "\nEmbed the missing keywords into bullet rewrites where semantically "
+                "justified by the master resume.\n\n"
             )
 
     user_msg += (

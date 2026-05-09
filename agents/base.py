@@ -108,3 +108,30 @@ def master_resume_cache_block(master_resume: dict) -> str:
         "## Master Resume (source of truth for all bullet matching)\n\n"
         f"```json\n{json.dumps(master_resume, indent=2)}\n```"
     )
+
+
+def warm_cache(master_resume: dict) -> None:
+    """Prime the prompt cache with master_resume using a cheap Haiku call.
+
+    Call this ONCE before parallel fan-out so all subsequent Sonnet calls
+    within 5 minutes hit the warm cache instead of each paying full price.
+    """
+    cached = master_resume_cache_block(master_resume)
+    # Minimal call — 1 token output, just enough to register the cache
+    with _client.messages.stream(
+        model=MODEL_HAIKU,
+        max_tokens=1,
+        temperature=0,
+        system=[
+            {
+                "type": "text",
+                "text": cached,
+                "cache_control": {"type": "ephemeral"},
+            },
+            {"type": "text", "text": "Acknowledge."},
+        ],
+        messages=[{"role": "user", "content": "ping"}],
+    ) as stream:
+        for _ in stream.text_stream:
+            pass
+    print("  [cache] Master resume cached for ~5 minutes")

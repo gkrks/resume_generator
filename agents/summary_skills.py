@@ -98,13 +98,15 @@ def write_summary_and_skills(
     master_resume: dict,
     role_type: str,
     fix_instructions: list[dict] | None = None,
+    previous_output: dict | None = None,
 ) -> dict:
     """Generate summary and skills in one call. Returns merged result.
 
     Args:
-        fix_instructions: Optional list of critical fixes from the coverage checker.
-            Each has 'issue' and 'fix' keys. When provided, the agent is told
-            exactly what keywords/skills to add.
+        fix_instructions: Critical fixes from the coverage checker.
+        previous_output: The full output from the previous round that PASSED checks.
+            When provided, the agent preserves everything that worked and only
+            modifies what the fix instructions specify.
     """
     import json
 
@@ -113,18 +115,33 @@ def write_summary_and_skills(
         f"## JD Analysis\n\n```json\n{json.dumps(jd_analysis, indent=2)}\n```\n\n"
     )
 
-    if fix_instructions:
+    if previous_output and fix_instructions:
+        user_msg += "## PREVIOUS ROUND OUTPUT (PRESERVE WHAT WORKS)\n\n"
+        user_msg += (
+            "The following summary and skills were generated in the previous round. "
+            "Most of this output PASSED the coverage checker. **Keep everything that "
+            "was working. Only modify or add what the fix instructions below specify.** "
+            "Do NOT remove skills or change the summary unless a fix explicitly asks for it.\n\n"
+        )
+        user_msg += f"```json\n{json.dumps(previous_output, indent=2)}\n```\n\n"
+
+        user_msg += "## CRITICAL FIXES REQUIRED\n\n"
+        user_msg += "Fix ONLY these specific issues while preserving everything else:\n\n"
+        for fix in fix_instructions:
+            user_msg += f"- **{fix.get('issue', '')}** → {fix.get('fix', '')}\n"
+        user_msg += (
+            "\nInclude the EXACT keywords listed above in the skills section. "
+            "Do not paraphrase — use the literal terms. "
+            "Do NOT remove any skills that were already present.\n\n"
+        )
+    elif fix_instructions:
         user_msg += "## CRITICAL FIXES REQUIRED FROM PREVIOUS ROUND\n\n"
         user_msg += "The coverage checker found these problems. You MUST fix them:\n\n"
         for fix in fix_instructions:
             user_msg += f"- **{fix.get('issue', '')}** → {fix.get('fix', '')}\n"
         user_msg += (
             "\nInclude the EXACT keywords listed above in the skills section. "
-            "Do not paraphrase them — use the literal terms. "
-            "For example, if it says add 'API Design', write 'API Design' not 'REST APIs'. "
-            "If it says add 'Unit Testing', write 'Unit Testing' not 'Testing'. "
-            "If it says add 'Large Language Models', write 'Large Language Models' or 'LLMs'. "
-            "If it says add 'AI Agents', write 'AI Agents'.\n\n"
+            "Do not paraphrase them — use the literal terms.\n\n"
         )
 
     user_msg += (

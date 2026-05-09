@@ -227,8 +227,94 @@ def _process_one_safe(item: dict) -> dict:
 DEFAULT_CONCURRENCY = int(os.environ.get("RESUME_CONCURRENCY", "3"))
 
 
+def _warm_cache_for_batch(items: list[dict]) -> dict:
+    """Load master_resume once and warm the prompt cache before parallel fan-out.
+
+    Returns the loaded master_resume dict so callers don't re-read it.
+    """
+    from pathlib import Path
+    from agents.base import warm_cache
+
+    master_path = Path(__file__).resolve().parent / "config" / "master_resume.json"
+    with open(master_path) as f:
+        master_resume = json.load(f)
+
+    if len(items) > 1:
+        print(f"  Warming prompt cache for {len(items)} parallel runs...")
+        warm_cache(master_resume)
+    return master_resume
+
+
+def _batch_analyze_jds(items: list[dict], master_resume: dict) -> dict[str, dict]:
+    """Run batched JD analysis for multiple items in one API call.
+
+    Returns a dict mapping queue_id -> jd_analysis.
+    Falls back to individual calls if batch fails.
+    """
+    from agents.jd_analyzer import analyze_jds_batch, analyze_jd
+
+    # Build JD texts for each item
+    jd_items = []
+    queue_ids = []
+    for item in items:
+        listing = fetch_job_listing(item["listing_id"])
+        if not listing:
+            continue
+
+        # Check US location
+        listing_loc = listing.get("location_raw", "")
+        if not is_us_location(listing_loc):
+            continue
+
+        jd_text = _build_jd_text(listing, item)
+
+        # Scrape if empty
+        raw_jd = listing.get("raw_jd_excerpt") or ""
+        if not raw_jd.strip():
+            role_url = item.get("role_url", "")
+            if role_url:
+                scraped = scrape_jd(role_url)
+                if scraped:
+                    jd_text = jd_text + "\n\n--- FULL JOB DESCRIPTION ---\n" + scraped
+
+        jd_items.append({
+            "jd_text": jd_text,
+            "role_type": item.get("role_category", "PM"),
+        })
+        queue_ids.append(item["id"])
+
+    if not jd_items:
+        return {}
+
+    # Batch only makes sense for 2+ items
+    if len(jd_items) < 2:
+        analysis = analyze_jd(jd_items[0]["jd_text"], master_resume, jd_items[0]["role_type"])
+        return {queue_ids[0]: analysis}
+
+    print(f"\n  Batching JD analysis for {len(jd_items)} roles in one API call...")
+    try:
+        analyses = analyze_jds_batch(jd_items, master_resume)
+        if len(analyses) == len(queue_ids):
+            return dict(zip(queue_ids, analyses))
+        else:
+            print(f"  WARNING: Batch returned {len(analyses)} results for {len(queue_ids)} JDs — falling back")
+    except Exception as e:
+        print(f"  WARNING: Batch JD analysis failed ({e}) — falling back to individual calls")
+
+    # Fallback: individual calls
+    result = {}
+    for qid, item in zip(queue_ids, jd_items):
+        result[qid] = analyze_jd(item["jd_text"], master_resume, item["role_type"])
+    return result
+
+
 def process_all(limit: int = 10, concurrency: int | None = None) -> list[dict]:
     """Process all pending queue items, optionally in parallel.
+
+    Optimizations:
+      1. Cache warm-up: one cheap Haiku call primes the cache before fan-out
+      2. Batched JD analysis: one API call for all JDs (when >1 item)
+      3. Early exit: skip fix loops if all 3 checks fail on round 0
 
     Args:
         limit: Max items to fetch from queue.
@@ -244,6 +330,9 @@ def process_all(limit: int = 10, concurrency: int | None = None) -> list[dict]:
 
     print(f"Found {len(items)} pending item(s) in resume_queue.")
     print(f"Processing with concurrency={workers}\n")
+
+    # Warm the prompt cache before parallel fan-out
+    _warm_cache_for_batch(items)
 
     if workers == 1:
         # Sequential mode
