@@ -23,6 +23,7 @@ from scraper import scrape_jd
 _DRIVE_ENABLED = bool(
     os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
     or os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE")
+    or os.environ.get("GOOGLE_TOKEN_JSON")
 )
 
 
