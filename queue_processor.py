@@ -192,7 +192,14 @@ def process_one(queue_item: dict) -> dict:
         job_meta=job_meta,
     )
 
-    # Write back check results and mark as done
+    # Only mark as done if the resume PDF was actually created on disk
+    resume_pdf = result.get("resume_pdf", "")
+    if not resume_pdf or not os.path.exists(resume_pdf):
+        raise RuntimeError(
+            f"Resume PDF was not created for {title} @ {company} "
+            f"(expected: {resume_pdf})"
+        )
+
     checks = result.get("checks", {})
     mark_resume_completed(
         queue_id=queue_id,
