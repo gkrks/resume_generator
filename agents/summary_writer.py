@@ -37,7 +37,7 @@ Sum months across qualifying PM/relevant experiences, divide by 12:
 - Saayam: 2025-02 to 2025-12 = 10 months
 - Wurq: 2023-09 to 2024-01 = 4 months
 - ZS: 2021-06 to 2022-06 = 12 months
-Round honestly.
+Round up to the nearest whole year.
 
 ## Output schema (strict JSON)
 

@@ -572,7 +572,7 @@
                 },
                 {
                     "id": "exp_wurq_2_f2a3",
-                    "text": "Rebuilt the ML inference pipeline on AWS Lambda (Python), cutting p95 latency from 490ms to 67ms (~7x) through cold-start optimization, request batching, and model-loading improvements.",
+                    "text": "Rebuilt the ML inference pipeline on AWS Lambda (Python), cutting p95 latency by 34% through cloud dev environments and cold-start optimization.",
                     "format": "XYZ",
                     "skills": [
                         "AWS Lambda",
@@ -583,9 +583,7 @@
                         "p95 Latency"
                     ],
                     "metrics": [
-                        "490ms",
-                        "67ms",
-                        "7x"
+                        "34%"
                     ],
                     "source": "resume",
                     "evidence_url": null
@@ -701,7 +699,7 @@
                 },
                 {
                     "id": "exp_wurq_2_f2a3",
-                    "text": "Rebuilt the ML inference pipeline on AWS Lambda (Python), cutting p95 latency from 490ms to 67ms (~7x) through cold-start optimization, request batching, and lazy model-loading with shared /tmp caching.",
+                    "text": "Rebuilt the ML inference pipeline on AWS Lambda (Python), cutting p95 latency by 34% through cloud dev environments and cold-start optimization.",
                     "format": "XYZ",
                     "skills": [
                         "AWS Lambda",
@@ -711,9 +709,7 @@
                         "Request Batching"
                     ],
                     "metrics": [
-                        "490ms",
-                        "67ms",
-                        "~7x"
+                        "34%"
                     ],
                     "source": "resume",
                     "evidence_url": null

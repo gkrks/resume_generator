@@ -296,7 +296,7 @@ function buildDocx() {
   exps.forEach((exp, idx) => {
     paragraphs.push(headerLine(
       exp.role,
-      ` | ${exp.company}, ${exp.location}`,
+      ` | ${exp.company} | ${exp.location}`,
       exp.dates,
       BODY_SIZE,
       idx === 0 ? 0 : ENTRY_BEFORE,
@@ -537,7 +537,7 @@ function buildPdf() {
   // --- Experience ---
   drawSectionHeading("Experience");
   exps.forEach((exp, idx) => {
-    drawHeaderLine(exp.role, ` | ${exp.company}, ${exp.location}`, exp.dates, 9.5, idx === 0 ? 0 : 4);
+    drawHeaderLine(exp.role, ` | ${exp.company} | ${exp.location}`, exp.dates, 9.5, idx === 0 ? 0 : 4);
     exp.bullets.forEach((b, bi) => drawBullet(b, 9.5, bi === exp.bullets.length - 1, bi === 0));
   });
 

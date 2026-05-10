@@ -112,13 +112,18 @@ def write_outreach(outreach_result: dict, output_path: str) -> str:
 def write_cover_letter_text(cover_letter_result: dict, output_path: str) -> str:
     """Write cover letter text as markdown (before JS generation)."""
     lines = ["# COVER LETTER\n"]
-    lines.append(f"**Company research:** {cover_letter_result.get('company_research', '')}\n")
-    lines.append(f"**Closing style:** {cover_letter_result.get('closing_style', '')}\n")
+    lines.append(f"**Company research:** {cover_letter_result.get('company_research', cover_letter_result.get('company_detail', ''))}\n")
     lines.append(f"**Word count:** {cover_letter_result.get('word_count', '')}\n")
     lines.append("---\n")
     lines.append(cover_letter_result.get("paragraph_1", ""))
-    lines.append("")
-    lines.append(cover_letter_result.get("paragraph_2", ""))
+    para2 = cover_letter_result.get("paragraph_2", "")
+    if para2:
+        lines.append("")
+        lines.append(para2)
+    invite = cover_letter_result.get("filmsearch_invite", "")
+    if invite:
+        lines.append("")
+        lines.append(invite)
 
     content = "\n".join(lines)
     with open(output_path, "w") as f:

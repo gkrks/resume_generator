@@ -25,7 +25,12 @@ For each skill, check where it appears:
 
 For each Basic-Qual keyword (from keyword inventory):
 - Must appear in BOTH skills section AND at least one bullet (double-presence)
-- Failing double-presence = CRITICAL
+- BUT only if the keyword is a concrete tool, language, framework, or technology.
+  Abstract concepts like "developer experience", "systems design", "end-to-end
+  ownership", "workflow automation", "infrastructure" are NOT skills and should
+  NOT be expected in the skills section. These are covered by bullets and summary.
+- Failing double-presence for a concrete tool/language = CRITICAL
+- Failing double-presence for an abstract concept = not a failure, skip it
 
 ## Recruiter Persona (filter-OUT, 6-second scan of top 1/3)
 
@@ -34,7 +39,14 @@ of most recent experience.
 
 1. TITLE MATCH — title line matches JD's exact role title?
 2. TOP-THIRD BASIC COVERAGE — each Basic Qual has evidence in top 1/3?
-3. KEYWORD DOUBLE-PRESENCE — every Basic+Preferred keyword in both Skills AND bullets?
+3. KEYWORD DOUBLE-PRESENCE — every Basic+Preferred keyword that is a concrete
+   tool, language, framework, or technology in both Skills AND bullets?
+   IMPORTANT: Only check concrete, nameable tools/technologies (e.g., Python,
+   Docker, CI/CD, AWS Lambda). Do NOT check or flag abstract concepts like
+   "developer tooling", "infrastructure", "internal platforms", "developer
+   experience", "engineering productivity", "workflow automation", "systems
+   design", "end-to-end ownership", "monorepo tooling", "codebase context".
+   Mark abstract keywords as PASS automatically — they are NOT skills.
 4. TOP 3 REJECT REASONS — name the 3 things most likely to cause rejection
 
 ## Hiring Manager Persona (filter-IN, full read)

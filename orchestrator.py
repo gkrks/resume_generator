@@ -92,13 +92,12 @@ def _compute_checks(coverage_result: dict) -> dict:
 
 
 def _enforce_keyword_coverage(jd_analysis: dict, skills_data: dict) -> dict:
-    """Programmatically inject any missing Basic-Qual keywords into skills.
+    """Log missing Basic-Qual keywords but do NOT inject them.
 
-    The LLM sometimes omits keywords even when told to include them.
-    This is a deterministic safety net that runs after the agent call.
-    Missing keywords get appended to the last skills category.
+    Previously this force-injected every missing keyword into the last
+    skills category, causing keyword stuffing. Now it only logs what's
+    missing so the coverage checker can evaluate naturally.
     """
-    # Get all Basic-Qual keywords (embed_target = "Required")
     inventory = jd_analysis.get("keyword_inventory", [])
     required_keywords = [
         k["keyword"] for k in inventory
@@ -108,27 +107,13 @@ def _enforce_keyword_coverage(jd_analysis: dict, skills_data: dict) -> dict:
     if not required_keywords:
         return skills_data
 
-    # Check which are already present (case-insensitive)
     skills_lines = skills_data.get("skills", [])
     all_skills_text = " | ".join(s.get("list", "") for s in skills_lines).lower()
 
-    missing = []
-    for kw in required_keywords:
-        if kw.lower() not in all_skills_text:
-            missing.append(kw)
+    missing = [kw for kw in required_keywords if kw.lower() not in all_skills_text]
 
-    if not missing:
-        return skills_data
-
-    # Append missing keywords to the last category
-    if skills_lines:
-        last = skills_lines[-1]
-        current_list = last.get("list", "")
-        appended = ", ".join(missing)
-        new_list = f"{current_list}, {appended}" if current_list else appended
-        last["list"] = new_list
-        last["char_count"] = len(f"{last['name']}: {new_list}")
-        print(f"  [keyword-enforce] Injected missing keywords into '{last['name']}': {missing}")
+    if missing:
+        print(f"  [keyword-coverage] Keywords not in skills (OK if abstract): {missing}")
 
     return skills_data
 
@@ -186,12 +171,14 @@ def _generate_cover_letter_files(
     company, role, cl_result, out_dir, company_safe, tmp_dir,
 ):
     """Generate cover letter DOCX (runs in thread pool)."""
+    cl_data = cl_result.get("cover_letter", {})
     cl_js = generate_cover_letter_js(
         company=company,
         role=role,
-        para1=cl_result.get("cover_letter", {}).get("paragraph_1", ""),
-        para2=cl_result.get("cover_letter", {}).get("paragraph_2", ""),
+        para1=cl_data.get("paragraph_1", ""),
+        para2=cl_data.get("paragraph_2", ""),
         output_dir=str(out_dir),
+        filmsearch_invite=cl_data.get("filmsearch_invite", ""),
     )
     cl_js_path = str(tmp_dir / f"cover_letter_{company_safe}.js")
     with open(cl_js_path, "w") as f:

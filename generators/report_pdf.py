@@ -167,7 +167,7 @@ class ReportPDF(FPDF):
                 self.set_text_color(*_DARK)
                 self.set_font("Helvetica", "", 7)
             else:
-                self.cell(w, 4.5, text[:int(w / 1.6)], new_x="RIGHT")
+                self.cell(w, 4.5, text[:int(w / 2.0)], new_x="RIGHT")
         self.ln()
 
     def bullet_item(self, text: str):
@@ -350,15 +350,15 @@ def generate_report_pdf(
 
     req_cov = coverage_result.get("coverage_report", {}).get("requirement_coverage", [])
     if req_cov:
-        cols = [("#", 7), ("Requirement", 68), ("Type", 20), ("Status", 16), ("Coverage", 48)]
+        cols = [("#", 6), ("Requirement", 75), ("Type", 18), ("Status", 14), ("Coverage", 55)]
         pdf.table_header(cols)
         for r in req_cov:
             pdf.table_row([
-                (str(r.get("req_id", "")), 7),
-                (r.get("requirement", "")[:42], 68),
-                (r.get("type", ""), 20),
-                (r.get("status", ""), 16),
-                (r.get("coverage", "")[:28], 48),
+                (str(r.get("req_id", "")), 6),
+                (r.get("requirement", ""), 75),
+                (r.get("type", ""), 18),
+                (r.get("status", ""), 14),
+                (r.get("coverage", ""), 55),
             ], status_col=3)
         pdf.ln(1)
 
@@ -398,26 +398,86 @@ def generate_report_pdf(
     pdf.set_font("Helvetica", "B", 8)
     pdf.cell(0, 5, "Metric Plausibility:", new_x="LMARGIN", new_y="NEXT")
     for m in hm.get("metric_plausibility", []):
-        bullet_text = m.get("bullet", "")[:45]
-        note = m.get("note", "")
+        bullet_text = _clean(m.get("bullet", ""))[:55]
+        note = _clean(m.get("note", ""))
         status = m.get("status", "PASS")
-        pdf.kv_row(f"  {bullet_text}...", note, status)
+        # Bullet label + status badge on one line
+        pdf.set_font("Helvetica", "B", 7.5)
+        pdf.set_text_color(*_DARK)
+        pdf.cell(90, 5, f"  {bullet_text}", new_x="RIGHT")
+        color = _status_color(status)
+        bg = _status_bg(status)
+        pdf.set_fill_color(*bg)
+        pdf.set_font("Helvetica", "B", 7.5)
+        pdf.set_text_color(*color)
+        pdf.cell(14, 5, _clean(status.upper()), fill=True, align="C", new_x="LMARGIN", new_y="NEXT")
+        # Reasoning on next line, indented
+        pdf.set_font("Helvetica", "", 7.5)
+        pdf.set_text_color(*_GRAY)
+        pdf.multi_cell(0, 4, f"    {note}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(0.5)
 
     ss = hm.get("scope_seniority", {})
-    pdf.kv_row("Scope-Seniority Match", ss.get("detail", ""), ss.get("status", "?"))
+    ss_detail = _clean(ss.get("detail", ""))
+    ss_status = ss.get("status", "?")
+    # Line 1: label + status badge
+    pdf.set_font("Helvetica", "B", 7.5)
+    pdf.set_text_color(*_DARK)
+    pdf.cell(100, 5, "  Scope-Seniority Match", new_x="RIGHT")
+    color = _status_color(ss_status)
+    bg = _status_bg(ss_status)
+    pdf.set_fill_color(*bg)
+    pdf.set_font("Helvetica", "B", 7.5)
+    pdf.set_text_color(*color)
+    pdf.cell(14, 5, _clean(ss_status.upper()), fill=True, align="C", new_x="LMARGIN", new_y="NEXT")
+    # Line 2: detail text wrapping
+    pdf.set_font("Helvetica", "", 7.5)
+    pdf.set_text_color(*_GRAY)
+    pdf.multi_cell(0, 4, f"    {ss_detail}", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(0.5)
 
     td = hm.get("technical_depth", {})
-    pdf.kv_row("Technical Depth", td.get("detail", ""), td.get("status", "?"))
+    td_detail = _clean(td.get("detail", ""))
+    td_status = td.get("status", "?")
+    # Line 1: label + status badge
+    pdf.set_font("Helvetica", "B", 7.5)
+    pdf.set_text_color(*_DARK)
+    pdf.cell(100, 5, "  Technical Depth", new_x="RIGHT")
+    color = _status_color(td_status)
+    bg = _status_bg(td_status)
+    pdf.set_fill_color(*bg)
+    pdf.set_font("Helvetica", "B", 7.5)
+    pdf.set_text_color(*color)
+    pdf.cell(14, 5, _clean(td_status.upper()), fill=True, align="C", new_x="LMARGIN", new_y="NEXT")
+    # Line 2: detail text wrapping
+    pdf.set_font("Helvetica", "", 7.5)
+    pdf.set_text_color(*_GRAY)
+    pdf.multi_cell(0, 4, f"    {td_detail}", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(0.5)
 
     pdf.ln(1)
     pdf.set_font("Helvetica", "B", 8)
     pdf.cell(0, 5, "Day-1 Readiness:", new_x="LMARGIN", new_y="NEXT")
     for d in hm.get("day1_readiness", []):
-        resp = d.get("responsibility", "")[:35]
-        proof = d.get("proof_bullet", "N/A")[:35]
+        resp = _clean(d.get("responsibility", ""))
+        proof = _clean(d.get("proof_bullet", "N/A"))
         status = d.get("status", "gap")
         s = "PASS" if status.lower() in ("covered", "pass") else "FAIL"
-        pdf.kv_row(f"  {resp}", f"Proof: {proof}", s)
+        # Line 1: responsibility + status badge
+        pdf.set_font("Helvetica", "B", 7.5)
+        pdf.set_text_color(*_DARK)
+        pdf.cell(100, 5, f"  {resp}", new_x="RIGHT")
+        color = _status_color(s)
+        bg = _status_bg(s)
+        pdf.set_fill_color(*bg)
+        pdf.set_font("Helvetica", "B", 7.5)
+        pdf.set_text_color(*color)
+        pdf.cell(14, 5, _clean(s.upper()), fill=True, align="C", new_x="LMARGIN", new_y="NEXT")
+        # Line 2: proof text indented in gray
+        pdf.set_font("Helvetica", "", 7.5)
+        pdf.set_text_color(*_GRAY)
+        pdf.multi_cell(0, 4, f"    Proof: {proof}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(0.5)
     pdf.ln(2)
 
     # ── Section 5: Critical Fixes (if any) ───────────────────────

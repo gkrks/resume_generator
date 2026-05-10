@@ -13,7 +13,7 @@ Strategy per platform:
 
 import re
 import json
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 import httpx
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeoutError
 
@@ -49,6 +49,12 @@ def _detect_platform(url: str) -> str:
         return "google"
     if "amazon.jobs" in host:
         return "amazon"
+
+    # Embedded Ashby — career pages that use ashby_jid query param
+    qs = parse_qs(urlparse(url).query)
+    if "ashby_jid" in qs:
+        return "ashby"
+
     return "generic"
 
 
@@ -154,9 +160,67 @@ def _scrape_greenhouse(url: str) -> str:
     return _scrape_with_httpx(url)
 
 
-def _scrape_ashby(url: str) -> str:
-    """Ashby — Playwright with targeted selectors (API is unreliable)."""
-    return _scrape_with_playwright(url, selectors=[
+def _scrape_ashby(url: str, org_name: str | None = None, job_id: str | None = None) -> str:
+    """Ashby — GraphQL API first, Playwright fallback."""
+    # Extract org_name and job_id from URL if not provided
+    if not org_name or not job_id:
+        parsed = urlparse(url)
+        if "ashbyhq.com" in (parsed.hostname or ""):
+            parts = parsed.path.strip("/").split("/")
+            if len(parts) >= 2:
+                org_name = org_name or parts[0]
+                job_id = job_id or parts[1]
+
+    # Try GraphQL API first
+    if org_name and job_id:
+        api_url = "https://jobs.ashbyhq.com/api/non-user-graphql?op=ApiJobPostingWithBoard"
+        payload = {
+            "operationName": "ApiJobPostingWithBoard",
+            "variables": {
+                "organizationHostedJobsPageName": org_name,
+                "jobPostingId": job_id,
+            },
+            "query": (
+                "query ApiJobPostingWithBoard("
+                "$organizationHostedJobsPageName: String!, "
+                "$jobPostingId: String!) { "
+                "jobPosting("
+                "organizationHostedJobsPageName: $organizationHostedJobsPageName, "
+                "jobPostingId: $jobPostingId) { "
+                "id title descriptionHtml departmentName locationName } }"
+            ),
+        }
+        try:
+            resp = httpx.post(api_url, json=payload, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+            posting = (data.get("data") or {}).get("jobPosting")
+            if posting:
+                sections = []
+                sections.append(f"Role: {posting.get('title', '')}")
+                dept = posting.get("departmentName", "")
+                if dept:
+                    sections.append(f"Department: {dept}")
+                loc = posting.get("locationName", "")
+                if loc:
+                    sections.append(f"Location: {loc}")
+                sections.append("")
+
+                desc = _html_to_text(posting.get("descriptionHtml", ""))
+                if desc:
+                    sections.append(desc)
+
+                result = "\n".join(sections).strip()
+                if len(result) >= 200:
+                    return result
+        except Exception as e:
+            print(f"  Ashby GraphQL API failed: {e}")
+
+    # Fallback to Playwright — use the ashbyhq URL if we have org+job info
+    playwright_url = url
+    if org_name and job_id:
+        playwright_url = f"https://jobs.ashbyhq.com/{org_name}/{job_id}"
+    return _scrape_with_playwright(playwright_url, selectors=[
         "[class*='ashby-job-posting-brief-description']",
         "[class*='jobPosting']",
         "[class*='job-posting']",
@@ -446,6 +510,43 @@ def scrape_jd(url: str) -> str:
 
     platform = _detect_platform(url)
     print(f"  Scraping JD from {url} (platform: {platform})...")
+
+    # Embedded Ashby — URL is not on ashbyhq.com but has ashby_jid param
+    parsed = urlparse(url)
+    host = parsed.hostname or ""
+    if platform == "ashby" and "ashbyhq.com" not in host:
+        qs = parse_qs(parsed.query)
+        ashby_jid = qs.get("ashby_jid", [None])[0]
+        if ashby_jid:
+            # Build candidate org names from the hostname
+            # e.g. www.clay.com → ["clay", "claylabs", "clayhq"]
+            domain_parts = host.split(".")
+            # Remove www prefix and TLD
+            core_parts = [p for p in domain_parts if p not in ("www",)]
+            if len(core_parts) >= 2:
+                core_parts = core_parts[:-1]  # drop TLD
+            base_name = core_parts[0] if core_parts else ""
+
+            candidates = []
+            if base_name:
+                candidates.append(base_name)
+                candidates.append(f"{base_name}labs")
+                candidates.append(f"{base_name}hq")
+            # Also try the full domain minus TLD if multi-part (e.g. "claylabs")
+            if len(core_parts) > 1:
+                joined = "".join(core_parts)
+                if joined not in candidates:
+                    candidates.append(joined)
+
+            for org_guess in candidates:
+                print(f"  Trying embedded Ashby with org={org_guess}, jid={ashby_jid}...")
+                text = _scrape_ashby(url, org_name=org_guess, job_id=ashby_jid)
+                if len(text) >= 200:
+                    print(f"  Scraped {len(text)} chars via embedded Ashby (org={org_guess})")
+                    return text
+
+            # All org guesses failed — fall through to generic fallback
+            print(f"  Embedded Ashby org guesses exhausted — trying fallbacks...")
 
     # Use platform-specific scraper if available
     scraper = _SCRAPERS.get(platform)

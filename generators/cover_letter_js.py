@@ -29,6 +29,7 @@ const ROLE = {role_json};
 
 const PARA1 = {para1_json};
 const PARA2 = {para2_json};
+const FILMSEARCH_INVITE = {filmsearch_invite_json};
 
 const PAGE_WIDTH = 12240;
 const PAGE_HEIGHT = 15840;
@@ -65,10 +66,18 @@ function buildDocx() {{
     spacing: {{ after: 200, line: LINE_SPACING, lineRule: "auto" }},
     children: [new TextRun({{ text: PARA1, font: "Calibri", size: BODY_SIZE }})],
   }}));
-  paragraphs.push(new Paragraph({{
-    spacing: {{ after: 200, line: LINE_SPACING, lineRule: "auto" }},
-    children: [new TextRun({{ text: PARA2, font: "Calibri", size: BODY_SIZE }})],
-  }}));
+  if (PARA2) {{
+    paragraphs.push(new Paragraph({{
+      spacing: {{ after: 200, line: LINE_SPACING, lineRule: "auto" }},
+      children: [new TextRun({{ text: PARA2, font: "Calibri", size: BODY_SIZE }})],
+    }}));
+  }}
+  if (FILMSEARCH_INVITE) {{
+    paragraphs.push(new Paragraph({{
+      spacing: {{ after: 200, line: LINE_SPACING, lineRule: "auto" }},
+      children: [new TextRun({{ text: FILMSEARCH_INVITE, font: "Calibri", size: BODY_SIZE }})],
+    }}));
+  }}
   paragraphs.push(new Paragraph({{
     spacing: {{ after: 40, line: LINE_SPACING, lineRule: "auto" }},
     children: [new TextRun({{ text: "Best,", font: "Calibri", size: BODY_SIZE }})],
@@ -120,8 +129,14 @@ function buildPdf() {{
   y += doc.heightOfString(`Dear ${{COMPANY}} Hiring Team,`) + 10;
   doc.text(PARA1, leftX, y, {{ width: PDF_USABLE_W }});
   y += doc.heightOfString(PARA1, {{ width: PDF_USABLE_W }}) + 14;
-  doc.text(PARA2, leftX, y, {{ width: PDF_USABLE_W }});
-  y += doc.heightOfString(PARA2, {{ width: PDF_USABLE_W }}) + 20;
+  if (PARA2) {{
+    doc.text(PARA2, leftX, y, {{ width: PDF_USABLE_W }});
+    y += doc.heightOfString(PARA2, {{ width: PDF_USABLE_W }}) + 14;
+  }}
+  if (FILMSEARCH_INVITE) {{
+    doc.text(FILMSEARCH_INVITE, leftX, y, {{ width: PDF_USABLE_W }});
+    y += doc.heightOfString(FILMSEARCH_INVITE, {{ width: PDF_USABLE_W }}) + 20;
+  }}
   doc.text("Best,", leftX, y);
   y += doc.heightOfString("Best,") + 4;
   doc.text(NAME, leftX, y);
@@ -148,6 +163,7 @@ def generate_cover_letter_js(
     para1: str,
     para2: str,
     output_dir: str,
+    filmsearch_invite: str = "",
 ) -> str:
     """Generate the cover_letter JS file content."""
     import json
@@ -165,6 +181,7 @@ def generate_cover_letter_js(
         role_json=json.dumps(role),
         para1_json=json.dumps(para1),
         para2_json=json.dumps(para2),
+        filmsearch_invite_json=json.dumps(filmsearch_invite),
     )
 
     return js_content

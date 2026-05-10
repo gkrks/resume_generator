@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #f8fafc;
+    }
+    .subtitle {
+      color: #94a3b8;
+      margin-bottom: 36px;
+      font-size: 15px;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #f8fafc;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: #6366f1;
+    }
+    input::placeholder, textarea::placeholder { color: #475569; }
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+    .divider {
+      text-align: center;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 16px 0;
+      position: relative;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: #334155;
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .form-row .url-field { flex: 1; }
+    .form-row .role-field { width: 140px; }
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #4f46e5; }
+    button:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* Progress */
+    #progress {
+      display: none;
+      margin-top: 24px;
+    }
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid #334155;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-text {
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    .log-box {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 16px;
+      max-height: 320px;
+      overflow-y: auto;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #64748b;
+    }
+    .log-box .log-line { margin-bottom: 2px; }
+    .log-box .log-line.step {
+      color: #6366f1;
+      font-weight: 600;
+    }
+
+    /* Results */
+    #results {
+      display: none;
+      margin-top: 24px;
+    }
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .tier-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tier-Strong { background: #065f46; color: #6ee7b7; }
+    .tier-Maybe { background: #78350f; color: #fbbf24; }
+    .tier-DontWasteTime { background: #7f1d1d; color: #fca5a5; }
+    .checks {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .check-pill {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .check-pass { background: #064e3b; color: #6ee7b7; }
+    .check-fail { background: #450a0a; color: #fca5a5; }
+    .file-list { list-style: none; }
+    .file-list li {
+      padding: 10px 14px;
+      border-bottom: 1px solid #1e293b;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .file-list li:last-child { border-bottom: none; }
+    .file-label { color: #94a3b8; }
+    .file-path {
+      color: #6366f1;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+      word-break: break-all;
+    }
+    .file-path a {
+      color: #818cf8;
+      text-decoration: none;
+    }
+    .file-path a:hover { text-decoration: underline; }
+    .drive-section {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: #0f172a;
+      border-radius: 8px;
+    }
+    .drive-section h3 {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .drive-link {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+    .drive-link a {
+      color: #818cf8;
+      text-decoration: none;
+    }
+    .drive-link a:hover { text-decoration: underline; }
+    .output-dir {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #94a3b8;
+      word-break: break-all;
+    }
+    .output-dir strong { color: #cbd5e1; }
+
+    /* Error */
+    .error-box {
+      padding: 16px;
+      background: #450a0a;
+      border: 1px solid #7f1d1d;
+      border-radius: 8px;
+      color: #fca5a5;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    /* Reset button */
+    .btn-reset {
+      margin-top: 16px;
+      background: transparent;
+      border: 1px solid #334155;
+      color: #94a3b8;
+    }
+    .btn-reset:hover {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Resume Generator</h1>
+    <p class="subtitle">Paste a job URL to generate a tailored resume, cover letter, and outreach materials.</p>
+
+    <div class="card" id="form-card">
+      <div class="form-row">
+        <div class="url-field">
+          <label for="url">Job Posting URL</label>
+          <input type="text" id="url" placeholder="https://jobs.lever.co/company/posting-id" autofocus />
+        </div>
+        <div class="role-field">
+          <label for="role">Role Type</label>
+          <select id="role">
+            <option value="PM">PM</option>
+            <option value="APM">APM</option>
+            <option value="TPM">TPM</option>
+            <option value="SWE">SWE</option>
+            <option value="PLM">PLM</option>
+          </select>
+        </div>
+      </div>
+      <div class="divider">OR</div>
+      <div style="margin-bottom: 20px;">
+        <label for="jd-text">Paste Job Description</label>
+        <textarea id="jd-text" placeholder="Paste the full job description here if the URL doesn't work..."></textarea>
+      </div>
+      <button id="btn-generate" onclick="generate()">Generate Resume</button>
+    </div>
+
+    <div id="progress">
+      <div class="status-bar">
+        <div class="spinner" id="spinner"></div>
+        <span class="status-text" id="status-text">Starting...</span>
+      </div>
+      <div class="log-box" id="log-box"></div>
+    </div>
+
+    <div class="error-box" id="error-box"></div>
+
+    <div id="results">
+      <div class="card">
+        <div class="result-header">
+          <h2>Results</h2>
+          <span class="tier-badge" id="tier-badge"></span>
+        </div>
+        <div class="checks" id="checks"></div>
+        <ul class="file-list" id="file-list"></ul>
+        <div class="output-dir" id="output-dir"></div>
+      </div>
+      <button class="btn-reset" onclick="reset()">Generate Another</button>
+    </div>
+  </div>
+
+  <script>
+    let eventSource = null;
+
+    function generate() {
+      const url = document.getElementById('url').value.trim();
+      const jdText = document.getElementById('jd-text').value.trim();
+      const role = document.getElementById('role').value;
+
+      if (!url && !jdText) {
+        document.getElementById('url').focus();
+        return;
+      }
+
+      const btn = document.getElementById('btn-generate');
+      btn.disabled = true;
+      btn.textContent = 'Starting...';
+
+      document.getElementById('progress').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('error-box').style.display = 'none';
+      document.getElementById('log-box').innerHTML = '';
+
+      const payload = { role_type: role };
+      if (jdText) {
+        payload.jd_text = jdText;
+        if (url) payload.url = url;
+      } else {
+        payload.url = url;
+      }
+
+      fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) {
+            showError(data.error);
+            return;
+          }
+          listenToStream(data.job_id);
+        })
+        .catch(err => showError(err.message));
+    }
+
+    function listenToStream(jobId) {
+      eventSource = new EventSource(`/stream/${jobId}`);
+
+      eventSource.addEventListener('status', e => {
+        document.getElementById('status-text').textContent = e.data;
+      });
+
+      eventSource.addEventListener('log', e => {
+        const box = document.getElementById('log-box');
+        const line = document.createElement('div');
+        line.className = 'log-line' + (e.data.includes('[') && e.data.includes('/') ? ' step' : '');
+        line.textContent = e.data;
+        box.appendChild(line);
+        box.scrollTop = box.scrollHeight;
+      });
+
+      eventSource.addEventListener('done', e => {
+        eventSource.close();
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('status-text').textContent = 'Complete!';
+
+        const results = JSON.parse(e.data);
+        showResults(results);
+      });
+
+      eventSource.addEventListener('error', e => {
+        if (e.data) {
+          eventSource.close();
+          showError(e.data);
+        }
+      });
+
+      eventSource.addEventListener('end', () => {
+        eventSource.close();
+      });
+
+      eventSource.onerror = () => {
+        eventSource.close();
+      };
+    }
+
+    function showResults(r) {
+      const tier = r.tier || 'Unknown';
+
+      // Tier badge
+      const badge = document.getElementById('tier-badge');
+      badge.textContent = tier;
+      badge.className = `tier-badge tier-${tier}`;
+
+      // Checks
+      const checks = r.checks || {};
+      const checksEl = document.getElementById('checks');
+      checksEl.innerHTML = [
+        ['ATS', checks.ats_check],
+        ['Recruiter', checks.recruiter_check],
+        ['Hiring Manager', checks.hr_check],
+      ].map(([label, pass]) =>
+        `<span class="check-pill ${pass ? 'check-pass' : 'check-fail'}">${label}: ${pass ? 'PASS' : 'FAIL'}</span>`
+      ).join('');
+
+      // Drive links (primary) or local paths (fallback)
+      const fileList = document.getElementById('file-list');
+      const driveLinks = r.drive_links || {};
+      const files = [
+        ['Resume PDF', r.resume_pdf],
+        ['Cover Letter', r.cover_letter_docx],
+        ['Evaluation Report', r.evaluation_report],
+        ['Cold Outreach', r.cold_outreach],
+      ].filter(([, v]) => v);
+
+      // Match local filenames to Drive links
+      fileList.innerHTML = files.map(([label, localPath]) => {
+        const filename = localPath.split('/').pop();
+        const driveUrl = driveLinks[filename];
+        const display = driveUrl
+          ? `<a href="${driveUrl}" target="_blank">${filename}</a>`
+          : filename;
+        return `<li><span class="file-label">${label}</span><span class="file-path">${display}</span></li>`;
+      }).join('');
+
+      // Output dir
+      document.getElementById('output-dir').innerHTML =
+        `<strong>Output directory:</strong> ${r.output_dir}`;
+
+      document.getElementById('results').style.display = 'block';
+    }
+
+    function showError(msg) {
+      const box = document.getElementById('error-box');
+      box.textContent = msg;
+      box.style.display = 'block';
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('status-text').textContent = 'Failed';
+      document.getElementById('btn-generate').disabled = false;
+      document.getElementById('btn-generate').textContent = 'Generate Resume';
+    }
+
+    function reset() {
+      document.getElementById('url').value = '';
+      document.getElementById('jd-text').value = '';
+      document.getElementById('progress').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('error-box').style.display = 'none';
+      document.getElementById('btn-generate').disabled = false;
+      document.getElementById('btn-generate').textContent = 'Generate Resume';
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('url').focus();
+    }
+
+    // Submit on Enter
+    document.getElementById('url').addEventListener('keydown', e => {
+      if (e.key === 'Enter') generate();
+    });
+
+    // Pre-fill from query params (for email button links)
+    // Usage: https://your-server.com/?url=https://jobs.lever.co/...&role=SWE
+    (function prefill() {
+      const params = new URLSearchParams(window.location.search);
+      const url = params.get('url');
+      const role = params.get('role');
+      if (url) document.getElementById('url').value = url;
+      if (role) {
+        const sel = document.getElementById('role');
+        for (const opt of sel.options) {
+          if (opt.value === role.toUpperCase()) { sel.value = opt.value; break; }
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

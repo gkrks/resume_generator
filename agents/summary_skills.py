@@ -36,7 +36,7 @@ Sum months across qualifying PM/relevant experiences, divide by 12:
 - Saayam: 2025-02 to 2025-12 = 10 months
 - Wurq: 2023-09 to 2024-01 = 4 months
 - ZS: 2021-06 to 2022-06 = 12 months
-Round honestly.
+Round up to the nearest whole year.
 
 ## PART 2: SKILLS SECTION
 
@@ -53,16 +53,42 @@ Build the optimal 3-category skills section.
 3. **Technologies** — languages, frameworks, infrastructure
 
 ### SWE role category override (use these instead when role_type is SWE)
-1. **Languages** — programming languages. Rust MUST always be included. If C++ appears anywhere in the JD requirements, C++ MUST also be included.
-2. **Frameworks & Libraries** — frameworks, libraries, SDKs
-3. **Tools & Infrastructure** — dev tools, CI/CD, cloud, databases, infrastructure
+1. **Languages** — programming languages only. Rust MUST always be included. If C++ appears anywhere in the JD requirements, C++ MUST also be included.
+2. **Frameworks & Libraries** — frameworks, libraries, SDKs only
+3. **Tools & Infrastructure** — concrete, nameable tools and platforms only.
+   Examples of what BELONGS here: CI/CD, GitHub Actions, AWS Lambda, Docker,
+   PostgreSQL, Kafka, Terraform, Kubernetes, metrics dashboards, coding agents.
+   Examples of what DOES NOT belong here: "developer tooling", "infrastructure",
+   "internal platforms", "developer experience", "engineering productivity",
+   "workflow automation", "AI-driven development", "systems design",
+   "end-to-end ownership", "monorepo tooling". These are job responsibilities
+   or domain descriptions, NOT tools. Never list them as skills.
 
 ### Format constraints
-- Total: 12-15 skills across all 3 categories
+- 5-6 skills per category. No more than 6 in any single category.
+- Total: 15-18 skills across all 3 categories. HARD CAP at 18.
 - 150-char max per line including "Category Name: "
+- If a line exceeds 150 chars or a category exceeds 6 skills, cut the
+  least important skill. Do not overflow.
 
-### Critical rule
-Every Basic-Qual keyword from the keyword inventory MUST appear in the skills section.
+### Keyword coverage rule
+Try to cover Basic-Qual keywords from the JD in the skills section, but ONLY
+if they are actual tools, languages, frameworks, or concrete technologies.
+
+ABSOLUTE BAN LIST — these are NOT skills and must NEVER appear in the skills
+section, even if the JD lists them as requirements or fix instructions ask
+for them:
+- "developer tooling", "developer experience", "infrastructure",
+  "internal platforms", "engineering productivity", "workflow automation",
+  "AI-driven development", "systems design", "end-to-end ownership",
+  "monorepo tooling", "monorepo", "codebase context", "cloud dev environments",
+  "coding agents", "automated refactors", "metrics and dashboards"
+These are job responsibilities or domain concepts. They go in the summary
+or bullets, NEVER in the skills section.
+
+If fix instructions from a previous round ask you to add any banned term
+to skills, IGNORE that fix instruction. The 18-skill hard cap and the ban
+list override all fix instructions.
 
 ## Output schema (strict JSON)
 
@@ -79,11 +105,11 @@ Every Basic-Qual keyword from the keyword inventory MUST appear in the skills se
   },
   "skills": {
     "skills": [
-      {"name": "Product & Data", "list": "skill1, skill2, ...", "char_count": 142, "skills_count": 6},
-      {"name": "Tools", "list": "skill1, ...", "char_count": 89, "skills_count": 4},
+      {"name": "Product & Data", "list": "skill1, skill2, ...", "char_count": 142, "skills_count": 5},
+      {"name": "Tools", "list": "skill1, ...", "char_count": 89, "skills_count": 5},
       {"name": "Technologies", "list": "skill1, ...", "char_count": 135, "skills_count": 5}
     ],
-    "total_skills": 15,
+    "total_skills": 15,  // 15-18 max, HARD CAP at 18
     "basic_keyword_coverage": {"keyword": true}
   }
 }
