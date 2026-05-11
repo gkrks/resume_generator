@@ -2714,6 +2714,143 @@
                     "evidence_url": "https://github.com/sreenish27/learning-skill"
                 }
             ]
+        },
+        {
+            "id": "proj_inference_writeup_5",
+            "name": "What Is Inference, Actually?",
+            "description": "5,000-word technical deep-dive on LLM inference end-to-end",
+            "url": null,
+            "evidence_url": "https://krithik.xyz/what-is-inference-actually",
+            "status": "published",
+            "tech_stack": [
+                "LLM Inference",
+                "Transformer Architecture",
+                "Grouped-Query Attention",
+                "KV Cache",
+                "SwiGLU",
+                "Speculative Decoding",
+                "Quantization",
+                "Continuous Batching",
+                "PagedAttention",
+                "Multi-LoRA Serving",
+                "Nvidia H100",
+                "Llama 3.1 8B"
+            ],
+            "bullets": [
+                {
+                    "id": "proj_inference_writeup_5_a1b2",
+                    "text": "Wrote a 5,000-word technical deep-dive tracing a single LLM query from tokenization through 32 transformer layers to token sampling, grounding every concept (GQA, KV cache, SwiGLU, speculative decoding) in Llama 3.1 8B on H100 hardware with concrete math.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Technical Writing",
+                        "LLM Inference",
+                        "Transformer Architecture",
+                        "Grouped-Query Attention",
+                        "KV Cache",
+                        "SwiGLU"
+                    ],
+                    "metrics": [
+                        "5,000 words",
+                        "32 layers",
+                        "8.03B parameters"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/what-is-inference-actually"
+                },
+                {
+                    "id": "proj_inference_writeup_5_b3c4",
+                    "text": "Mapped the inference optimization landscape — quantization, continuous batching, speculative decoding, PagedAttention, Multi-LoRA serving — to the specific hardware bottleneck each one attacks, framing where moats live in the inference stack.",
+                    "format": "CAR",
+                    "skills": [
+                        "Inference Optimization",
+                        "Quantization",
+                        "Continuous Batching",
+                        "Speculative Decoding",
+                        "PagedAttention",
+                        "Multi-LoRA Serving"
+                    ],
+                    "metrics": [
+                        "6 optimization surfaces"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/what-is-inference-actually"
+                },
+                {
+                    "id": "proj_inference_writeup_5_c5d6",
+                    "text": "Derived the decode bandwidth ceiling from first principles (16 GB model ÷ 3,350 GB/s HBM = ~209 tok/s theoretical, ~150 tok/s real) and showed why KV cache at 128K context consumes as much HBM as the model itself, collapsing concurrency ~125×.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Hardware Analysis",
+                        "HBM Bandwidth",
+                        "KV Cache Economics",
+                        "Back-of-Envelope Estimation"
+                    ],
+                    "metrics": [
+                        "~209 tok/s theoretical",
+                        "~150 tok/s real",
+                        "~125× concurrency collapse"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/what-is-inference-actually"
+                }
+            ],
+            "swe_bullets": [
+                {
+                    "id": "proj_inference_writeup_5_a1b2",
+                    "text": "Wrote a 5,000-word technical reference tracing LLM inference end-to-end on Llama 3.1 8B / H100: BPE tokenization, embedding lookup, GQA attention with causal masking, SwiGLU MLP, KV cache mechanics, and autoregressive decode — with the math at every step.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Technical Writing",
+                        "LLM Inference",
+                        "BPE Tokenization",
+                        "GQA",
+                        "Causal Masking",
+                        "SwiGLU",
+                        "KV Cache"
+                    ],
+                    "metrics": [
+                        "5,000 words",
+                        "32 layers"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/what-is-inference-actually"
+                },
+                {
+                    "id": "proj_inference_writeup_5_b3c4",
+                    "text": "Analyzed the prefill/decode asymmetry from HBM bandwidth constraints, deriving the ~150 tok/s single-user decode ceiling and showing how continuous batching drops cost-per-token ~100× by amortizing weight reads across concurrent users.",
+                    "format": "XYZ",
+                    "skills": [
+                        "Inference Performance Analysis",
+                        "HBM Bandwidth",
+                        "Continuous Batching",
+                        "Decode Optimization"
+                    ],
+                    "metrics": [
+                        "~150 tok/s",
+                        "~100× cost reduction"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/what-is-inference-actually"
+                },
+                {
+                    "id": "proj_inference_writeup_5_c5d6",
+                    "text": "Mapped six inference optimization surfaces — custom GPU kernels, KV cache compression (PagedAttention, MLA), quantization (FP8/INT4), speculative decoding, continuous batching, Multi-LoRA serving — to their specific hardware bottlenecks and moat potential.",
+                    "format": "XYZ",
+                    "skills": [
+                        "GPU Kernels",
+                        "KV Cache Compression",
+                        "Quantization",
+                        "Speculative Decoding",
+                        "PagedAttention",
+                        "Multi-LoRA"
+                    ],
+                    "metrics": [
+                        "6 optimization surfaces"
+                    ],
+                    "source": "website",
+                    "evidence_url": "https://krithik.xyz/what-is-inference-actually"
+                }
+            ]
         }
     ],
     "education": [
