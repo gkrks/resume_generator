@@ -53,12 +53,23 @@ For each requirement from the JD analysis:
 If C++ appears in the keyword inventory, prefer selecting the filmsearch C++ bullet
 (proj_filmsearch_1_f3h4) and ensure "C++" appears naturally in the rewritten text.
 This guarantees double-presence (skills + bullet) for C++ when the JD requires it.
+Do NOT insert "C++" into bullets whose master_resume source does not mention C++.
 
-## Fact preservation
+## Fact preservation (HARD CONSTRAINT — NEVER VIOLATE)
 
-- No fabrication — facts must come from master_resume
+- No fabrication — every fact (language, framework, metric, domain noun) must come
+  verbatim from master_resume. If the master says "Rust", you write "Rust", NOT "C++".
+  If the master says "build-state", you write "build-state", NOT "ride-state".
+- NEVER swap one technology for another to match the JD. The JD wants C++? Only use
+  C++ in a bullet whose master_resume source already mentions C++.
+- NEVER inject JD-specific domain nouns (e.g. "vehicle state transitions",
+  "autonomous vehicles", "ride management") into bullets whose source doesn't
+  contain them. The summary can echo JD framing; bullets cannot fabricate it.
 - Within an experience entry, OK to pull from sibling bullets, context, metrics
 - Cross-experience pulling NOT allowed
+- A bullet's section assignment must match its ID prefix: exp_matic_0_* bullets
+  can ONLY appear under "exp_matic_0", proj_filmsearch_1_* ONLY under
+  "proj_filmsearch_1", etc. Never place a bullet under a different section.
 
 ## Conflict handling
 
