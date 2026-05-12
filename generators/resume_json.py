@@ -27,7 +27,9 @@ def build_working_resume(
     for sel in jd_analysis["selected_experiences"]:
         exp_id = sel["id"]
         master_exp = exp_lookup[exp_id]
-        final_bullets = bullet_result["final_bullets"].get(exp_id, [])
+        raw_bullets = bullet_result["final_bullets"].get(exp_id, [])
+        # Guard: only accept bullets that actually belong to this experience
+        final_bullets = [fb for fb in raw_bullets if fb["bullet_id"].startswith(exp_id)]
 
         # Use rewritten bullets if available, otherwise fall back to master
         bullets = []
@@ -55,7 +57,9 @@ def build_working_resume(
     for sel in jd_analysis["selected_projects"]:
         proj_id = sel["id"]
         master_proj = proj_lookup[proj_id]
-        final_bullets = bullet_result["final_bullets"].get(proj_id, [])
+        raw_bullets = bullet_result["final_bullets"].get(proj_id, [])
+        # Guard: only accept bullets that actually belong to this project
+        final_bullets = [fb for fb in raw_bullets if fb["bullet_id"].startswith(proj_id)]
 
         bullets = []
         for fb in final_bullets:
